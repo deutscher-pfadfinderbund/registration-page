@@ -3,12 +3,13 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.9.0-RC1"]
+  :dependencies [[org.clojure/clojure "1.9.0-RC2"]
                  [org.clojure/test.check "0.9.0"]
 
                  [hiccup "2.0.0-alpha1"]
 
                  [io.pedestal/pedestal.service "0.5.3"]
+                 [geheimtur "0.3.3"]
 
                  [clj-http "3.7.0"]
                  [org.clojure/data.json "0.2.6"]

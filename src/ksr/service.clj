@@ -2,9 +2,23 @@
   (:require [io.pedestal.http :as http]
             [io.pedestal.http.body-params :as body-params]
             [ring.util.response :as ring-resp]
-            [hiccup.page :as hp]))
+            [hiccup.page :as hp]
+            [clojure.spec.alpha :as s]
+            [geheimtur.interceptor :as gti]))
 
 (def state (atom {:teilnehmer []}))
+
+(defn store-participant! [user]
+  (spit "database.edn" (swap! state update-in [:teilnehmer] conj user)))
+
+(s/fdef store-participant!
+        :args (s/cat :user ::user))
+
+(defn load-database! []
+  (reset! state (read-string (slurp "database.edn"))))
+
+
+;; -----------------------------------------------------------------------------
 
 (defn with-header [& body]
   (ring-resp/response
@@ -52,61 +66,112 @@
     [:a {:href "mailto:shuttle@dpb-remscheid.de"} "shuttle@dpb-remscheid.de"]
     "."]])
 
+
+;; -----------------------------------------------------------------------------
+
 (defn home-page [request]
   (with-header
-   [:div.text-center "Es sind nur noch " [:strong (+ 10 (rand-int 20))] " Plätze verfügbar!"]
-   [:br]
-   [:form#form {:action "/registrieren" :method :POST}
-    [:div.form-group
-     [:label "Name *"]
-     [:input.form-control {:name "name" :required true}]]
-    [:div.form-group
-     [:label "Einheit *"]
-     [:input.form-control {:name "einheit" :required true}]]
-    [:div.form-group
-     [:label "Stand *"]
-     [:select.form-control {:name "stand" :required true}
-      [:option {:value ""} ""]
-      [:option {:value "Jungwolf"} "Jungwolf"]
-      [:option {:value "Knappe"} "Knappe"]
-      [:option {:value "Späher"} "Späher"]
-      [:option {:value "St.-Georgs-Knappe"} "St.-Georgs-Knappe"]
-      [:option {:value "Ordensritter"} "Ordensritter"]
-      [:option {:value "St.-Georgs-Ritter"} "St.-Georgs-Ritter"]
-      [:option {:value "Sonstiges"} "Sonstiges"]]]
-    [:div.form-group
-     [:label "Essensbesonderheiten"]
-     [:input.form-control {:name "essen-besonderheiten"}]]
-    [:div.form-group
-     [:label "Das letzte Thema in meinem Ständekreis war..."]
-     [:textarea.form-control {:name "das-letzte-thema-staendekreis" :rows 3}]]
-    [:div.form-group
-     [:label "Orden ist für mich..."]
-     [:textarea.form-control {:name "orden-ist-fuer-mich" :rows 3}]]
-    [:button {:class "btn btn-primary g-recaptcha"
-              :data-sitekey "6LdAujoUAAAAAHFeE4cFmwC6FriiZgVDeQx32T9M"
-              :data-callback "onSubmit"} "Abschicken"]
-    [:input {:class "btn btn-primary"
-             :type :submit
-             :value "Anmelden"}]]
+    [:script "
+      function onSubmit(token) {
+        alert('thanks ' + document.getElementById('name').value);
+      }
 
-   footer))
+      function validate(event) {
+        event.preventDefault();
+        if (!document.getElementById('name').value) {
+          alert('You must add text to the required field');
+        } else {
+          grecaptcha.execute();
+        }
+      }
 
-(defn register-page [{{:keys [name einheit stand
-                              essen-besonderheiten
-                              das-letzte-thema-staendekreis]} :form-params}]
+      function onload() {
+        var element = document.getElementById('submit');
+        element.onclick = validate;
+      }
+"]
+    [:div.text-center "Es sind nur noch " [:strong (+ 10 (rand-int 20))] " Plätze verfügbar!"]
+    [:br]
+    [:form#form {:action "/registrieren" :method :POST}
+     [:div.form-group
+      [:label#name "Name *"]
+      [:input.form-control {:name "name" :required true}]]
+     [:div.form-group
+      [:label "Einheit *"]
+      [:input.form-control {:name "einheit" :required true}]]
+     [:div.form-group
+      [:label "Stand *"]
+      [:select.form-control {:name "stand" :required true}
+       [:option {:value ""} ""]
+       [:option {:value "Jungwolf"} "Jungwolf"]
+       [:option {:value "Knappe"} "Knappe"]
+       [:option {:value "Späher"} "Späher"]
+       [:option {:value "St.-Georgs-Knappe"} "St.-Georgs-Knappe"]
+       [:option {:value "Ordensritter"} "Ordensritter"]
+       [:option {:value "St.-Georgs-Ritter"} "St.-Georgs-Ritter"]
+       [:option {:value "Sonstiges"} "Sonstiges"]]]
+     [:div.form-group
+      [:label "Essensbesonderheiten"]
+      [:input.form-control {:name "essen-besonderheiten"}]]
+     [:div.form-group
+      [:label "Das letzte Thema in meinem Ständekreis war..."]
+      [:textarea.form-control {:name "das-letzte-thema-staendekreis" :rows 3}]]
+     [:div.form-group
+      [:label "Orden ist für mich..."]
+      [:textarea.form-control {:name "orden-ist-fuer-mich" :rows 3}]]
+     [:div#recaptcha.g-recaptcha
+      {:data-sitekey "6LdAujoUAAAAAHFeE4cFmwC6FriiZgVDeQx32T9M"
+       :data-callback "onSubmit"
+       :data-size "invisible"}]
+     [:button {:class "btn btn-primary"} "Abschicken"]
+     #_[:input {:class "btn btn-primary"
+              :type :submit
+              :value "Anmelden"}]]
+    footer))
+
+(defn register-page [{{:keys [name]} :form-params :as request}]
+  (store-participant! (:form-params request))
   (with-header
-    [:div.alert.alert-info
+    [:div.alert.alert-info {:style {:margin "3rem 0"}}
      "Nun steht dein Name auf unserer Liste, " name ". Wir freuen uns schon auf dich!"]
     footer))
 
 
 ;; -----------------------------------------------------------------------------
+;; Admin
+
+(defn users-to-rows []
+  (for [user (:teilnehmer @state)]
+    [:tr [:td (:name user)][:td (:einheit user)][:td (:stand user)]]))
+
+(defn admin-page [request]
+  (with-header
+    [:h2 "Anmeldungen"]
+    [:br][:br]
+    [:table.table.table-striped
+     [:thead [:tr [:th "Name"][:th "Einheit"][:th "Stand"]]]
+     [:tbody (users-to-rows)]]))
+
+
+;; -----------------------------------------------------------------------------
+
+(def users {"ksr" {:password "diskette"
+                     :roles #{:ksr}
+                     :full-name "Knäppchen"}})
+
+(defn credentials
+  [_ {:keys [username password]}]
+  (when-let [identity (get users username)]
+    (when (= password (:password identity))
+      (dissoc identity :password ))))
 
 (def common-interceptors [(body-params/body-params) http/html-body])
+(def http-basic-interceptors (into common-interceptors [(gti/http-basic "... Nope." credentials)]))
 
 (def routes #{["/" :get (conj common-interceptors `home-page)]
-              ["/registrieren" :post (conj common-interceptors `register-page)]})
+              ["/registrieren" :post (conj common-interceptors `register-page)]
+              ["/anmeldungen" :get (into http-basic-interceptors
+                                         [(gti/guard :silent? false :roles #{:ksr}) `admin-page])]})
 
 (def service {:env :prod
               ::http/routes routes
@@ -117,3 +182,13 @@
                                         :h2? false
                                         :ssl? false}})
 
+;; -----------------------------------------------------------------------------
+
+(s/def ::name string?)
+(s/def ::einheit string?)
+(s/def ::essen-besonderheiten string?)
+(s/def ::das-letzte-thema-staendekreis string?)
+(s/def ::orden-ist-fuer-mich string?)
+(s/def ::user
+  (s/keys :req-un [::name ::einheit ::essen-besonderheiten
+                   ::das-letzte-thema-staendekreis ::orden-ist-fuer-mich]))
