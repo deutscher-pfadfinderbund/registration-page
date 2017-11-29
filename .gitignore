@@ -37,3 +37,4 @@ out/
 build/
 
 database.edn
+*.mp4
