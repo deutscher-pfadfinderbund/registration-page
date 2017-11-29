@@ -25,7 +25,6 @@
    (hp/html5
     (hp/include-css "css/bootstrap.min.css")
     (hp/include-css "css/main.css")
-    (hp/include-js "https://www.google.com/recaptcha/api.js")
     [:div.container
      [:div.row
       [:div.col-md-1]
@@ -41,58 +40,96 @@
        [:br]
        body]]])))
 
+(defn build-hiking-map []
+  [:div
+   [:link {:rel "stylesheet"
+           :href "https://unpkg.com/leaflet@1.2.0/dist/leaflet.css"
+           :integrity "sha512-M2wvCLH6DSRazYeZRIm1JnYyh22purTM+FDB5CsyxtQJYeKq83arPe5wgbNmcFXGqiSH2XR8dT/fJISVA1r/zQ=="
+           :crossorigin ""}]
+   [:script {:src "https://unpkg.com/leaflet@1.2.0/dist/leaflet.js"
+             :integrity "sha512-lInM/apFSqyy1o6s89K4iQUKg6ppXEgsVxT35HbzUupEVRh2Eu9Wdl4tHj7dZO0s1uvplcYGmt3498TtHq+log=="
+             :crossorigin ""}]
+   (hp/include-js "https://api.mapbox.com/mapbox.js/v2.2.2/mapbox.js")
+   (hp/include-css "https://api.mapbox.com/mapbox.js/v2.2.2/mapbox.css")
+   (hp/include-js "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v0.0.4/Leaflet.fullscreen.min.js")
+   (hp/include-css "https://api.mapbox.com/mapbox.js/plugins/leaflet-fullscreen/v0.0.4/leaflet.fullscreen.css")
+   [:script "
+     L.mapbox.accessToken = 'pk.eyJ1IjoibjJvIiwiYSI6ImNpZWd6c2NrMDAwMHBzd204NW41bmFsNHUifQ.XstEiEGH9bP2wasGOOVp4g';
+
+     var mymap = L.map('map', {
+        center: [51.16778, 7.16582],
+        zoom: 16,
+        layers: [L.mapbox.tileLayer('mapbox.streets')],  // Set default map
+        maxZoom: 19,
+        minZoom: 0
+      });
+
+     var kotten = L.marker([51.16630, 7.16825])
+                   .addTo(mymap)
+                   .bindTooltip('<b>Diederichskotten</b><br>Besser ihr wachst eure Juja noch einmal frisch')
+                   .openTooltip();
+
+     L.polygon([
+       [51.16957, 7.16347],
+       [51.16940, 7.16312],
+       [51.16903, 7.16326],
+       [51.16910, 7.16381]
+     ]).addTo(mymap).bindTooltip('P&R Parkplätze');
+
+     var popup = L.popup();
+
+     var baseMaps = {
+       'Mapbox':                         L.mapbox.tileLayer('mapbox.streets'),
+       'OSM':                            L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'),
+       'Satellit mit Straßen':           L.mapbox.tileLayer('mapbox.streets-satellite'),
+       'Zum Wandern und Fahrrad fahren': L.mapbox.tileLayer('mapbox.run-bike-hike')
+     };
+
+     L.control.layers(baseMaps).addTo(mymap);
+     L.control.fullscreen().addTo(mymap);
+     L.control.scale().addTo(mymap);
+"]])
+
 (def footer
   [:div
    [:hr {:style {:margin-top "3rem"}}]
    [:h2 "Wichtige Informationen"]
-   [:br]
-   [:a.btn.btn-light {:href "pdf/einladung-ksr.pdf"}
-    "Einladung als PDF"]
+   [:h4 "Einladung"]
+   [:div.card.card-1
+    [:a {:href "pdf/einladung-ksr.pdf"}
+     [:img.hover.img-fluid
+      {:src "pdf/einladung-ksr.png"
+       :style {:width "300px"}}]]]
 
+   [:hr]
+   [:h4 "Wetterbericht"]
+   [:video {:width 640 :controls true}
+    [:source {:src "vid/remscheiderwetter.mp4" :type "video/mp4"}]]
+
+   [:hr]
    [:h4 "Anreise"]
    [:p "Adresse: Hammertal 4, 42857 Remscheid"]
    [:p "Der Bahnhof \"Remscheid-Güldenwerth\" ist ca. 10 Minuten fußläufig über einen Wanderweg erreichbar."]
    [:p "Bei Anreise mit dem "
     [:strong "Auto"]
     " parkt ihr bitte dem P&R Parkplatz am Bahnhof Güldenwerth und wandert die paar Meter zum Kotten."]
-   [:div.myIframe
-    [:iframe {:src "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2501.8611792782926!2d7.165978715930733!3d51.166348643402436!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47b92a86dce4928d%3A0x94cced3261c0deb0!2sDiedrichs-Kotten!5e0!3m2!1sde!2sde!4v1511819351039"
-              :frameborder 0
-              :allowfullscreen true
-              :style {:border 0}}]]
+   [:div#map]
 
+   [:hr]
    [:h4 "Shuttle"]
    [:p "Solltet ihr Shuttlebedarf haben, so meldet euch unter "
     [:a {:href "mailto:shuttle@dpb-remscheid.de"} "shuttle@dpb-remscheid.de"]
-    "."]])
+    "."]
+   (build-hiking-map)])
 
 
 ;; -----------------------------------------------------------------------------
 
 (defn home-page [request]
   (with-header
-    [:script "
-      function onSubmit(token) {
-        alert('thanks ' + document.getElementById('name').value);
-      }
-
-      function validate(event) {
-        event.preventDefault();
-        if (!document.getElementById('name').value) {
-          alert('You must add text to the required field');
-        } else {
-          grecaptcha.execute();
-        }
-      }
-
-      function onload() {
-        var element = document.getElementById('submit');
-        element.onclick = validate;
-      }
-"]
     [:div.text-center "Es sind nur noch " [:strong (+ 10 (rand-int 20))] " Plätze verfügbar!"]
     [:br]
-    [:form#form {:action "/registrieren" :method :POST}
+    [:form#demo-form {:action "/registrieren" :method :POST}
      [:div.form-group
       [:label#name "Name *"]
       [:input.form-control {:name "name" :required true}]]
@@ -119,12 +156,7 @@
      [:div.form-group
       [:label "Orden ist für mich..."]
       [:textarea.form-control {:name "orden-ist-fuer-mich" :rows 3}]]
-     [:div#recaptcha.g-recaptcha
-      {:data-sitekey "6LdAujoUAAAAAHFeE4cFmwC6FriiZgVDeQx32T9M"
-       :data-callback "onSubmit"
-       :data-size "invisible"}]
-     [:button {:class "btn btn-primary"} "Abschicken"]
-     #_[:input {:class "btn btn-primary"
+     [:input {:class "btn btn-primary"
               :type :submit
               :value "Anmelden"}]]
     footer))
@@ -134,7 +166,8 @@
   (with-header
     [:div.alert.alert-info {:style {:margin "3rem 0"}}
      "Nun steht dein Name auf unserer Liste, " name ". Wir freuen uns schon auf dich!"]
-    footer))
+    [:a.btn.btn-light {:href "https://ksr.deutscher-pfadfinderbund.de"}
+     "Zurück und tolle Informationen nachlesen"]))
 
 
 ;; -----------------------------------------------------------------------------

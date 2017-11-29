@@ -10,6 +10,7 @@
 
                  [io.pedestal/pedestal.service "0.5.3"]
                  [geheimtur "0.3.3"]
+                 [clj-recaptcha "0.0.2"]
 
                  [clj-http "3.7.0"]
                  [org.clojure/data.json "0.2.6"]
