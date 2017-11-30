@@ -4,21 +4,8 @@
             [ring.util.response :as ring-resp]
             [hiccup.page :as hp]
             [clojure.spec.alpha :as s]
-            [geheimtur.interceptor :as gti]))
-
-(def state (atom {:teilnehmer []}))
-
-(defn store-participant! [user]
-  (spit "database.edn" (swap! state update-in [:teilnehmer] conj user)))
-
-(s/fdef store-participant!
-        :args (s/cat :user ::user))
-
-(defn load-database! []
-  (reset! state (read-string (slurp "database.edn"))))
-
-
-;; -----------------------------------------------------------------------------
+            [geheimtur.interceptor :as gti]
+            [ksr.db :as db]))
 
 (defn with-header [& body]
   (ring-resp/response
@@ -66,15 +53,15 @@
 
      var kotten = L.marker([51.16630, 7.16825])
                    .addTo(mymap)
-                   .bindTooltip('<b>Diederichskotten</b><br>Besser ihr wachst eure Juja noch einmal frisch')
-                   .openTooltip();
+                   .bindPopup('<b>Diederichskotten</b><br>Besser ihr wachst eure Juja noch einmal frisch')
+                   .openPopup();
 
      L.polygon([
        [51.16957, 7.16347],
-       [51.16940, 7.16312],
-       [51.16903, 7.16326],
+       [51.16929, 7.16281],
+       [51.16890, 7.16302],
        [51.16910, 7.16381]
-     ]).addTo(mymap).bindTooltip('P&R Parkplätze');
+     ]).addTo(mymap).bindPopup('Parkplätze Remscheid-Güldenwerth');
 
      var popup = L.popup();
 
@@ -87,39 +74,60 @@
 
      L.control.layers(baseMaps).addTo(mymap);
      L.control.fullscreen().addTo(mymap);
-     L.control.scale().addTo(mymap);
-"]])
+     L.control.scale().addTo(mymap);"]])
 
 (def footer
   [:div
    [:hr {:style {:margin-top "3rem"}}]
    [:h2 "Wichtige Informationen"]
-   [:h4 "Einladung"]
-   [:div.card.card-1
-    [:a {:href "pdf/einladung-ksr.pdf"}
-     [:img.hover.img-fluid
-      {:src "pdf/einladung-ksr.png"
-       :style {:width "300px"}}]]]
+   [:div.row
+    [:div.col
+     [:h3 "Einladung"]
+     [:div.card.card-1
+      [:a {:href "pdf/einladung-ksr.pdf"}
+       [:img.hover.img-fluid
+        {:src "pdf/einladung-ksr.png"
+         :style {:width "300px"}}]]]]
+    [:div.col
+     [:h3 "Eckdaten"]
+     [:h4 "Wann?"][:p "27.04. - 29.04.2018"]
+     [:h4 "Preis?"][:p "Wissen wir noch nicht"]
+     [:h4 "Sollte ich teilnehmen?"][:p "Ja"]]]
 
    [:hr]
-   [:h4 "Wetterbericht"]
+   [:h3 "Wetterbericht"]
    [:video {:width 640 :controls true}
     [:source {:src "vid/remscheiderwetter.mp4" :type "video/mp4"}]]
 
    [:hr]
-   [:h4 "Anreise"]
-   [:p "Adresse: Hammertal 4, 42857 Remscheid"]
-   [:p "Der Bahnhof \"Remscheid-Güldenwerth\" ist ca. 10 Minuten fußläufig über einen Wanderweg erreichbar."]
-   [:p "Bei Anreise mit dem "
-    [:strong "Auto"]
-    " parkt ihr bitte dem P&R Parkplatz am Bahnhof Güldenwerth und wandert die paar Meter zum Kotten."]
-   [:div#map]
+   [:h3 "Anreise"]
+   [:div.row {:style {:padding-top "1rem"}}
+    [:div.col
+     [:h4 "Auto"]
+     [:p "Bei Anreise mit dem Auto parkt ihr bitte dem P&R Parkplatz am Bahnhof
+    \"Remscheid-Güldenwerth\" und wandert die paar Meter zum Kotten. Es gibt am
+    Kotten nur sehr wenige Parkplätze."]]
 
-   [:hr]
-   [:h4 "Shuttle"]
-   [:p "Solltet ihr Shuttlebedarf haben, so meldet euch unter "
-    [:a {:href "mailto:shuttle@dpb-remscheid.de"} "shuttle@dpb-remscheid.de"]
-    "."]
+    [:div.col
+     [:h4 "ÖPNV"]
+     [:p "Fahrt bis zum Bahnhof \"Remscheid-Güldenwerth\" (nicht zum
+   Hauptbahnhof!). Von Güldenwerth aus geht es ca. 10-15 Minuten über einen
+   Wanderweg zum Kotten."]]]
+
+   [:div.row
+    [:div.col
+     [:div.card.card-1
+      [:strong "Adresse vom Parkplatz"][:br]
+      [:a {:href "https://www.google.de/maps/place/G%C3%BCldenwerth+25,+42857+Remscheid/@51.1694412,7.1612363,278m/data=!3m2!1e3!4b1!4m5!3m4!1s0x47b92a800506e429:0x917b7db747322af8!8m2!3d51.16944!4d7.162?hl=de"}
+       "Güldenwerth 25, 42857 Remscheid"]]]
+    [:div.col
+     [:div.card.card-1
+      [:strong "Adresse vom Kotten"][:br]
+      [:a {:href "https://www.google.de/maps/place/Am+Kotten,+Hammertal+4,+42857+Remscheid/@51.1662742,7.1661182,798m/data=!3m2!1e3!4b1!4m5!3m4!1s0x47b92a86c4d2b9e5:0x33d3d6b74975abf4!8m2!3d51.166365!4d7.1681462?hl=de"}
+       "Hammertal 4, 42857 Remscheid"]]]]
+   [:br][:br]
+
+   [:div#map {:style {:height "600px"}}]
    (build-hiking-map)])
 
 
@@ -162,7 +170,7 @@
     footer))
 
 (defn register-page [{{:keys [name]} :form-params :as request}]
-  (store-participant! (:form-params request))
+  (db/add-participant! (:form-params request))
   (with-header
     [:div.alert.alert-info {:style {:margin "3rem 0"}}
      "Nun steht dein Name auf unserer Liste, " name ". Wir freuen uns schon auf dich!"]
@@ -174,8 +182,9 @@
 ;; Admin
 
 (defn users-to-rows []
-  (for [user (:teilnehmer @state)]
-    [:tr [:td (:name user)][:td (:einheit user)][:td (:stand user)]]))
+  (for [{:keys [name einheit stand]} (db/get-participants)
+        :when (not (nil? name))]
+    [:tr [:td name][:td einheit][:td stand]]))
 
 (defn admin-page [request]
   (with-header
@@ -188,9 +197,12 @@
 
 ;; -----------------------------------------------------------------------------
 
-(def users {"ksr" {:password "diskette"
-                     :roles #{:ksr}
-                     :full-name "Knäppchen"}})
+(def users
+  (let [user (or (System/getenv "KSR_USER") "ksr")
+        pass (or (System/getenv "KSR_PASS") "diskette")]
+    {user {:password pass
+           :roles #{(keyword user)}
+           :full-name "Knäppchen"}}))
 
 (defn credentials
   [_ {:keys [username password]}]
@@ -217,11 +229,12 @@
 
 ;; -----------------------------------------------------------------------------
 
-(s/def ::name string?)
-(s/def ::einheit string?)
-(s/def ::essen-besonderheiten string?)
-(s/def ::das-letzte-thema-staendekreis string?)
-(s/def ::orden-ist-fuer-mich string?)
+(s/def ::maybe-string (s/or :string string? :nil nil?))
+(s/def ::name ::maybe-string)
+(s/def ::einheit ::maybe-string)
+(s/def ::essen-besonderheiten ::maybe-string)
+(s/def ::das-letzte-thema-staendekreis ::maybe-string)
+(s/def ::orden-ist-fuer-mich ::maybe-string)
 (s/def ::user
   (s/keys :req-un [::name ::einheit ::essen-besonderheiten
                    ::das-letzte-thema-staendekreis ::orden-ist-fuer-mich]))
