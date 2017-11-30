@@ -121,7 +121,7 @@
     [:div.col-12.col-md-6
      [:h3 "Eckdaten"]
      [:h4 "Wann?"][:p "27.04. - 29.04.2018"]
-     [:h4 "Preis?"][:p "Wissen wir noch nicht"]
+     [:h4 "Preis?"][:p "Wissen wir noch nicht. Aber das Essen wird super."]
      [:h4 "Sollte ich teilnehmen?"][:p "Ja"]]]
 
    [:hr]
