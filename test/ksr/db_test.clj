@@ -8,10 +8,17 @@
    :stand "Nüscht"
    :essen-besonderheiten "Nein"
    :das-letzte-thema-staendekreis "Windows Vista installieren"
-   :orden-ist-fuer-mich "..."})
+   :orden-ist-fuer-mich "..."
+   :anfahrt "Untergrund"})
 
 (deftest add-and-query-participant
   (let [res (db/add-participant! participant)]
     (is (pos? ((ffirst res) res)))
     (is (not (empty? (db/get-participants))))
+    (is (pos? (db/delete-all-participants!)))))
+
+(deftest no-duplicates-allowed
+  (let [_ (db/add-participant! participant)
+        status (db/add-participant! participant)]
+    (is (= :duplicate status))
     (is (pos? (db/delete-all-participants!)))))

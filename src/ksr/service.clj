@@ -1,5 +1,6 @@
 (ns ksr.service
   (:require [io.pedestal.http :as http]
+            [io.pedestal.http.csrf :as csrf]
             [io.pedestal.http.body-params :as body-params]
             [ring.util.response :as ring-resp]
             [hiccup.page :as hp]
@@ -19,22 +20,20 @@
              :content "width=device-width, initial-scale=1"}]
      (hp/include-css "css/bootstrap.min.css")
      (hp/include-css "css/main.css")]
-    [:div.container
+    [:div.container {:style {:padding-bottom "2rem"}}
      [:div.row
       [:div.col-1.col-md-1]
       [:div.col-10.col-md-10.col-sm-12.card.card-3
-       [:img {:src "img/schriftzug-dpb.svg"
-              :style {:width "100%"}}]
+       [:div.row
+        [:div.col-1]
+        [:div.col-12.col-md-10
+         [:img {:src "img/schriftzug-dpb.svg"
+                :style {:width "100%"}}]]]
        [:h4.text-center {:style {:padding-top 0}} "Anmeldung zum"]
        [:h1.text-center "Knappen-Späher-Ritter Lager"]
        [:h4.text-center {:style {:padding-top 0}} "im sonnigen Remscheid"]
        [:br]
-       body]]
-     [:div.row {:style {:padding-bottom "1rem"
-                        :margin-top "0.5rem"}}
-      [:div.col-md-1]
-      [:div.col-md-10.col-sm-10.text-right
-       [:p [:a.text-secondary {:href "/anmeldungen"} "Anmeldungen"]]]]])))
+       body]]])))
 
 (defn build-hiking-map []
   [:div
@@ -85,6 +84,27 @@
      L.control.fullscreen().addTo(mymap);
      L.control.scale().addTo(mymap);"]])
 
+(def footer-nav
+  [:div
+   [:hr {:style {:margin "1rem"}}]
+   [:div.text-right
+    [:span [:a.btn.btn-link {:href "https://deutscher-pfadfinderbund.de/impressum/"} "Impressum und Datenschutz"]]
+    [:span [:a.btn.btn-link {:href "/anmeldungen"} "Anmeldungen"]]]
+   [:script "
+     <!-- Piwik -->
+       var _paq = _paq || [];
+       /* tracker methods like 'setCustomDimension' should be called before 'trackPageView' */
+       _paq.push(['setCookieDomain', '*.ksr.deutscher-pfadfinderbund.de']);
+       _paq.push(['trackPageView']);
+       _paq.push(['enableLinkTracking']);
+       (function() {
+         var u='//christian-meter.de/piwik/';
+         _paq.push(['setTrackerUrl', u+'piwik.php']);
+         _paq.push(['setSiteId', '15']);
+         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+         g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+       })();"]])
+
 (def footer
   [:div
    [:hr {:style {:margin-top "3rem"}}]
@@ -106,7 +126,7 @@
 
    [:hr]
    [:h3 "Wetterbericht"]
-   [:video {:width "100%" :controls true}
+   [:video {:width "100%" :controls true :preload "auto"}
     [:source {:src "vid/remscheiderwetter.mp4" :type "video/mp4"}]]
 
    [:hr]
@@ -140,10 +160,14 @@
    [:br][:br]
 
    [:div#map {:style {:height "600px"}}]
-   (build-hiking-map)])
+   (build-hiking-map)
+   footer-nav])
 
 
 ;; -----------------------------------------------------------------------------
+
+(defn csrf-form-input [request]
+  [:input {:name "__anti-forgery-token" :value (::csrf/anti-forgery-token request) :type "hidden"}])
 
 (defn home-page [request]
   (with-header
@@ -153,6 +177,7 @@
      [:div.form-group
       [:label#name "Name *"]
       [:input.form-control {:name "name" :required true}]]
+     (csrf-form-input request)
      [:div.form-group
       [:label "Einheit *"]
       [:input.form-control {:name "einheit" :required true}]]
@@ -169,25 +194,46 @@
        [:option {:value "Sonstiges"} "Sonstiges"]]]
      [:div.form-group
       [:label "Essensbesonderheiten"]
-      [:input.form-control {:name "essen-besonderheiten"}]]
+      [:select.form-control {:name "essen-besonderheiten"}
+       [:option {:value "keine Besonderheiten"} "keine Besonderheiten"]
+       [:option {:value "vegetarisch"} "vegetarisch"]
+       [:option {:value "vegan"} "vegan"]
+       [:option {:value "glutenfrei"} "glutenfrei"]
+       [:option {:value "lactosefrei"} "lactosefrei"]
+       [:option {:value "fructosefrei"} "fructosefrei"]
+       [:option {:value "histaminfrei"} "histaminfrei"]
+       [:option {:value "sacharosefrei"} "sacharosefrei"]
+       [:option {:value "sorbitfrei"} "sorbitfrei"]]]
      [:div.form-group
       [:label "Das letzte Thema in meinem Ständekreis war..."]
       [:textarea.form-control {:name "das-letzte-thema-staendekreis" :rows 3}]]
      [:div.form-group
       [:label "Orden ist für mich..."]
       [:textarea.form-control {:name "orden-ist-fuer-mich" :rows 3}]]
+     [:div.form-group
+      [:label "Besondere Informationen zur Anreise"]
+      [:textarea.form-control {:name "anfahrt" :rows 3}]]
      [:input {:class "btn btn-primary"
               :type :submit
               :value "Anmelden"}]]
     footer))
 
 (defn register-page [{{:keys [name]} :form-params :as request}]
-  (db/add-participant! (:form-params request))
-  (with-header
-    [:div.alert.alert-info {:style {:margin "3rem 0"}}
-     "Nun steht dein Name auf unserer Liste, " name ". Wir freuen uns schon auf dich!"]
-    [:a.btn.btn-light {:href "/"}
-     "Zurück und tolle Informationen nachlesen"]))
+  (let [status (db/add-participant! (:form-params request))]
+    (with-header
+      (if-not (= :duplicate status)
+        [:div
+         [:div.alert.alert-success {:style {:margin "1rem 0"}}
+          "Du hast dich erfolgreich zum Lager angemeldet!"]
+         [:p "Nun steht dein Name auf unserer Liste, " name ". Wir freuen uns schon auf dich!"]
+         [:p "Gehe hier " [:a {:href "/"} "zurück"] ", um dir die anderen Informationen durchzulesen oder um eine weitere Person anzumelden."]]
+        [:div
+         [:div.alert.alert-danger
+          "Der Datensatz, den du eintragen wolltest, existiert schon in unserer
+          Datenbank. Vielleicht hast du versucht dich doppelt anzumelden... Bei
+          Problemen kontaktiere rambo unter dieser Adresse: "
+          [:a {:href "bbi@deutscher-pfadfinderbund.de"} "bbi@deutscher-pfadfinderbund.de"]]
+         [:p "Gehe hier " [:a {:href "/"} "zurück"] " und probiere es erneut."]]))))
 
 
 ;; -----------------------------------------------------------------------------
@@ -222,7 +268,7 @@
     (when (= password (:password identity))
       (dissoc identity :password ))))
 
-(def common-interceptors [(body-params/body-params) http/html-body])
+(def common-interceptors [(body-params/body-params) http/html-body (csrf/anti-forgery)])
 (def http-basic-interceptors (into common-interceptors [(gti/http-basic "... Nope." credentials)]))
 
 (def routes #{["/" :get (conj common-interceptors `home-page)]
@@ -231,6 +277,7 @@
                                          [(gti/guard :silent? false :roles #{:ksr}) `admin-page])]})
 
 (def service {:env :prod
+              ::http/enable-csrf {}
               ::http/routes routes
               ::http/resource-path "/public"
               ::http/type :jetty
@@ -248,6 +295,7 @@
 (s/def ::essen-besonderheiten ::maybe-string)
 (s/def ::das-letzte-thema-staendekreis ::maybe-string)
 (s/def ::orden-ist-fuer-mich ::maybe-string)
+(s/def ::anfahrt ::maybe-string)
 (s/def ::user
-  (s/keys :req-un [::name ::einheit ::essen-besonderheiten
+  (s/keys :req-un [::name ::einheit ::essen-besonderheiten ::anfahrt
                    ::das-letzte-thema-staendekreis ::orden-ist-fuer-mich]))
