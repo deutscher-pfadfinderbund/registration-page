@@ -10,22 +10,31 @@
 (defn with-header [& body]
   (ring-resp/response
    (hp/html5
-    (hp/include-css "css/bootstrap.min.css")
-    (hp/include-css "css/main.css")
+    [:head
+     [:title "Anmeldung Knappen-Späher-Ritter-Lager 2017 in Remscheid"]
+     [:meta {:charset "utf-8"}]
+     [:meta {:http-equiv "X-UA-Compatible"
+             :content "IE=edge"}]
+     [:meta {:name "viewport"
+             :content "width=device-width, initial-scale=1"}]
+     (hp/include-css "css/bootstrap.min.css")
+     (hp/include-css "css/main.css")]
     [:div.container
      [:div.row
-      [:div.col-md-1]
-      [:div.col-md-10.col-sm-10.card.card-3
-       [:div.row
-        [:div.col-1]
-        [:div.col-10
-         [:img {:src "img/schriftzug-dpb.svg"
-                :style {:width "100%"}}]]]
+      [:div.col-1.col-md-1]
+      [:div.col-10.col-md-10.col-sm-12.card.card-3
+       [:img {:src "img/schriftzug-dpb.svg"
+              :style {:width "100%"}}]
        [:h4.text-center {:style {:padding-top 0}} "Anmeldung zum"]
        [:h1.text-center "Knappen-Späher-Ritter Lager"]
        [:h4.text-center {:style {:padding-top 0}} "im sonnigen Remscheid"]
        [:br]
-       body]]])))
+       body]]
+     [:div.row {:style {:padding-bottom "1rem"
+                        :margin-top "0.5rem"}}
+      [:div.col-md-1]
+      [:div.col-md-10.col-sm-10.text-right
+       [:p [:a.text-secondary {:href "/anmeldungen"} "Anmeldungen"]]]]])))
 
 (defn build-hiking-map []
   [:div
@@ -81,14 +90,15 @@
    [:hr {:style {:margin-top "3rem"}}]
    [:h2 "Wichtige Informationen"]
    [:div.row
-    [:div.col
+    [:div.col-12.col-md-6
      [:h3 "Einladung"]
      [:div.card.card-1
-      [:a {:href "pdf/einladung-ksr.pdf"}
+      [:a {:href "pdf/einladung-ksr.pdf"
+           :target "_blank"}
        [:img.hover.img-fluid
         {:src "pdf/einladung-ksr.png"
          :style {:width "300px"}}]]]]
-    [:div.col
+    [:div.col-12.col-md-6
      [:h3 "Eckdaten"]
      [:h4 "Wann?"][:p "27.04. - 29.04.2018"]
      [:h4 "Preis?"][:p "Wissen wir noch nicht"]
@@ -96,19 +106,19 @@
 
    [:hr]
    [:h3 "Wetterbericht"]
-   [:video {:width 640 :controls true}
+   [:video {:width "100%" :controls true}
     [:source {:src "vid/remscheiderwetter.mp4" :type "video/mp4"}]]
 
    [:hr]
    [:h3 "Anreise"]
    [:div.row {:style {:padding-top "1rem"}}
-    [:div.col
+    [:div.col-12.col-md-6
      [:h4 "Auto"]
      [:p "Bei Anreise mit dem Auto parkt ihr bitte dem P&R Parkplatz am Bahnhof
     \"Remscheid-Güldenwerth\" und wandert die paar Meter zum Kotten. Es gibt am
     Kotten nur sehr wenige Parkplätze."]]
 
-    [:div.col
+    [:div.col-12.col-md-6
      [:h4 "ÖPNV"]
      [:p "Fahrt bis zum Bahnhof \"Remscheid-Güldenwerth\" (nicht zum
    Hauptbahnhof!). Von Güldenwerth aus geht es ca. 10-15 Minuten über einen
@@ -118,12 +128,14 @@
     [:div.col
      [:div.card.card-1
       [:strong "Adresse vom Parkplatz"][:br]
-      [:a {:href "https://www.google.de/maps/place/G%C3%BCldenwerth+25,+42857+Remscheid/@51.1694412,7.1612363,278m/data=!3m2!1e3!4b1!4m5!3m4!1s0x47b92a800506e429:0x917b7db747322af8!8m2!3d51.16944!4d7.162?hl=de"}
+      [:a {:href "https://www.google.de/maps/place/G%C3%BCldenwerth+25,+42857+Remscheid/@51.1694412,7.1612363,278m/data=!3m2!1e3!4b1!4m5!3m4!1s0x47b92a800506e429:0x917b7db747322af8!8m2!3d51.16944!4d7.162?hl=de"
+           :target "_blank"}
        "Güldenwerth 25, 42857 Remscheid"]]]
     [:div.col
      [:div.card.card-1
       [:strong "Adresse vom Kotten"][:br]
-      [:a {:href "https://www.google.de/maps/place/Am+Kotten,+Hammertal+4,+42857+Remscheid/@51.1662742,7.1661182,798m/data=!3m2!1e3!4b1!4m5!3m4!1s0x47b92a86c4d2b9e5:0x33d3d6b74975abf4!8m2!3d51.166365!4d7.1681462?hl=de"}
+      [:a {:href "https://www.google.de/maps/place/Am+Kotten,+Hammertal+4,+42857+Remscheid/@51.1662742,7.1661182,798m/data=!3m2!1e3!4b1!4m5!3m4!1s0x47b92a86c4d2b9e5:0x33d3d6b74975abf4!8m2!3d51.166365!4d7.1681462?hl=de"
+           :target "_blank"}
        "Hammertal 4, 42857 Remscheid"]]]]
    [:br][:br]
 
@@ -174,7 +186,7 @@
   (with-header
     [:div.alert.alert-info {:style {:margin "3rem 0"}}
      "Nun steht dein Name auf unserer Liste, " name ". Wir freuen uns schon auf dich!"]
-    [:a.btn.btn-light {:href "https://ksr.deutscher-pfadfinderbund.de"}
+    [:a.btn.btn-light {:href "/"}
      "Zurück und tolle Informationen nachlesen"]))
 
 
@@ -223,6 +235,7 @@
               ::http/resource-path "/public"
               ::http/type :jetty
               ::http/port 8080
+              ::http/secure-headers {:content-security-policy-settings {:object-src "none"}}
               ::http/container-options {:h2c? true
                                         :h2? false
                                         :ssl? false}})

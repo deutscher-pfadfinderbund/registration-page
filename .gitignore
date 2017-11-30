@@ -38,3 +38,4 @@ build/
 
 database.edn
 *.mp4
+*.db
