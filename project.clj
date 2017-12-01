@@ -1,4 +1,4 @@
-(defproject ksr "0.0.1-SNAPSHOT"
+(defproject ksr "1.0.0"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"

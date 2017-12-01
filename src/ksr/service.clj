@@ -108,9 +108,9 @@
 (def footer
   [:div
    [:hr {:style {:margin-top "3rem"}}]
-   [:h2 "Wichtige Informationen"]
+   [:h2 "Informationen"]
    [:div.row
-    [:div.col-12.col-md-6
+    [:div.col-12.col-md-5
      [:h3 "Einladung"]
      [:div.card.card-1
       [:a {:href "pdf/einladung-ksr.pdf"
@@ -118,11 +118,32 @@
        [:img.hover.img-fluid
         {:src "pdf/einladung-ksr.png"
          :style {:width "300px"}}]]]]
+    [:div.col-md-1]
     [:div.col-12.col-md-6
      [:h3 "Eckdaten"]
-     [:h4 "Wann?"][:p "27.04. - 29.04.2018"]
-     [:h4 "Preis?"][:p "Wissen wir noch nicht. Aber das Essen wird super."]
-     [:h4 "Sollte ich teilnehmen?"][:p "Ja"]]]
+     [:h5 "Wann?"][:p "27.04. - 29.04.2018"]
+     [:h5 "Preis?"][:p [:strong "15 €"] ". Ist aber 20 wert!"]
+     [:h5 "Brauchen wir Kohten?"][:p "Ja"]
+     [:h5 "Sollte ich teilnehmen?"][:p "Ja"]]]
+   [:br]
+   [:h3 "Organisation"]
+   [:div.row
+    [:div.col-12.col-md-4
+     [:div.card.card-1
+      [:img.img-fluid
+       {:src "img/jhs.gif"
+        :style {:max-width "300px"}}]]]
+    [:div.col-12.col-md-6
+     [:p "Organisiert wird das Lager von eurer Lieblingsjungenschaft, der
+     Jungenschaft Hohenstaufen. Es findet bei uns in Remscheid statt, also zieht
+     euch wetterfest an."]
+     [:p "Bitte nehmt uns ein wenig Arbeit ab und meldet euch über das Formular
+     an. Zur besseren Einschätzung der Teilnehmer finden wir die Einzelanmeldung
+     sinnvoll."]
+     [:p "Sollte es Probleme geben, wovon wir mal nicht ausgehen, könnt ihr euch
+     bei rambo melden: "
+      [:a {:href "ksr@dpb-remscheid.de"} "ksr@dpb-remscheid.de"] "."]
+     [:p "Wir freuen uns auf euch!"]]]
 
    [:hr]
    [:h3 "Wetterbericht"]
@@ -134,9 +155,9 @@
    [:div.row {:style {:padding-top "1rem"}}
     [:div.col-12.col-md-6
      [:h4 "Auto"]
-     [:p "Bei Anreise mit dem Auto parkt ihr bitte dem P&R Parkplatz am Bahnhof
-    \"Remscheid-Güldenwerth\" und wandert die paar Meter zum Kotten. Es gibt am
-    Kotten nur sehr wenige Parkplätze."]]
+     [:p "Bei Anreise mit dem Auto parkt ihr bitte auf dem P&R Parkplatz am
+    Bahnhof \"Remscheid-Güldenwerth\" (blau markiert in der Karte) und wandert
+    die paar Meter zum Kotten. Es gibt am Kotten nur sehr wenige Parkplätze."]]
 
     [:div.col-12.col-md-6
      [:h4 "ÖPNV"]
@@ -202,7 +223,7 @@
        [:option {:value "lactosefrei"} "lactosefrei"]
        [:option {:value "fructosefrei"} "fructosefrei"]
        [:option {:value "histaminfrei"} "histaminfrei"]
-       [:option {:value "sacharosefrei"} "sacharosefrei"]
+       [:option {:value "saccharosefrei"} "sacharosefrei"]
        [:option {:value "sorbitfrei"} "sorbitfrei"]]]
      [:div.form-group
       [:label "Das letzte Thema in meinem Ständekreis war..."]
@@ -211,7 +232,7 @@
       [:label "Orden ist für mich..."]
       [:textarea.form-control {:name "orden-ist-fuer-mich" :rows 3}]]
      [:div.form-group
-      [:label "Besondere Informationen zur Anreise"]
+      [:label "Sonstige Informationen"]
       [:textarea.form-control {:name "anfahrt" :rows 3}]]
      [:input {:class "btn btn-primary"
               :type :submit
@@ -232,7 +253,7 @@
           "Der Datensatz, den du eintragen wolltest, existiert schon in unserer
           Datenbank. Vielleicht hast du versucht dich doppelt anzumelden... Bei
           Problemen kontaktiere rambo unter dieser Adresse: "
-          [:a {:href "bbi@deutscher-pfadfinderbund.de"} "bbi@deutscher-pfadfinderbund.de"]]
+          [:a {:href "ksr@dpb-remscheid.de"} "ksr@dpb-remscheid.de"]]
          [:p "Gehe hier " [:a {:href "/"} "zurück"] " und probiere es erneut."]]))))
 
 
