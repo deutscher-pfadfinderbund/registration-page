@@ -223,7 +223,7 @@
        [:option {:value "lactosefrei"} "lactosefrei"]
        [:option {:value "fructosefrei"} "fructosefrei"]
        [:option {:value "histaminfrei"} "histaminfrei"]
-       [:option {:value "saccharosefrei"} "sacharosefrei"]
+       [:option {:value "saccharosefrei"} "saccharosefrei"]
        [:option {:value "sorbitfrei"} "sorbitfrei"]]]
      [:div.form-group
       [:label "Das letzte Thema in meinem Ständekreis war..."]

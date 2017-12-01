@@ -1,8 +1,10 @@
 (ns ksr.db
   (:require [korma.db :as kdb]
             [korma.core :as kc]
+            [hiccup.util :as hutil]
             [clojure.spec.alpha :as s]
-            [ksr.db :as db]))
+            [ksr.db :as db]
+            [clojure.string :as string]))
 
 (kdb/defdb db (kdb/sqlite3 {:db "ksr.db"}))
 
@@ -42,13 +44,13 @@
     (if-not (contains? ps (dissoc participant :__anti-forgery-token))
       (kc/insert
        participants
-       (kc/values {:name name
-                   :einheit einheit
-                   :stand stand
-                   :essen_besonderheiten essen-besonderheiten
-                   :das_letzte_thema_staendekreis das-letzte-thema-staendekreis
-                   :orden_ist_fuer_mich orden-ist-fuer-mich
-                   :anfahrt anfahrt}))
+       (kc/values {:name (hutil/escape-html name)
+                   :einheit (hutil/escape-html einheit)
+                   :stand (hutil/escape-html stand)
+                   :essen_besonderheiten (hutil/escape-html essen-besonderheiten)
+                   :das_letzte_thema_staendekreis (hutil/escape-html das-letzte-thema-staendekreis)
+                   :orden_ist_fuer_mich (hutil/escape-html orden-ist-fuer-mich)
+                   :anfahrt (hutil/escape-html anfahrt)}))
       :duplicate)))
 
 (defn delete-all-participants! []
