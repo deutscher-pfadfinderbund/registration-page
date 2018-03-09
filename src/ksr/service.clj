@@ -12,7 +12,7 @@
   (ring-resp/response
    (hp/html5
     [:head
-     [:title "Anmeldung Knappen-Späher-Ritter-Lager 2017 in Remscheid"]
+     [:title "Anmeldung Knappen-Späher-Ritter-Lager 2018 in Remscheid"]
      [:meta {:charset "utf-8"}]
      [:meta {:http-equiv "X-UA-Compatible"
              :content "IE=edge"}]
@@ -87,9 +87,16 @@
 (def footer-nav
   [:div
    [:hr {:style {:margin "1rem"}}]
-   [:div.text-right
-    [:span [:a.btn.btn-link {:href "https://deutscher-pfadfinderbund.de/impressum/"} "Impressum und Datenschutz"]]
-    [:span [:a.btn.btn-link {:href "/anmeldungen"} "Anmeldungen"]]]
+   [:div.row
+    [:div.col-5
+     [:small.pull-left
+      "Diese Seite verwendet "
+      [:a {:href "https://deutscher-pfadfinderbund.de/impressum/#piwik"} "Piwik"]
+      " zur anonymen Datenerfassung"]]
+    [:div.col-7
+     [:div.text-right
+      [:span [:a.btn.btn-link {:href "https://deutscher-pfadfinderbund.de/impressum/"} "Impressum und Datenschutz"]]
+      [:span [:a.btn.btn-link {:href "/anmeldungen"} "Anmeldungen"]]]]]
    [:script "
      <!-- Piwik -->
        var _paq = _paq || [];
@@ -122,7 +129,7 @@
     [:div.col-12.col-md-6
      [:h3 "Eckdaten"]
      [:h5 "Wann?"][:p "27.04. - 29.04.2018"]
-     [:h5 "Preis?"][:p [:strong "15 €"] ". Ist aber 20 wert!"]
+     [:h5 "Preis?"][:p [:strong "20 €"] ". Ist aber 25 wert!"]
      [:h5 "Brauchen wir Kohten?"][:p "Ja"]
      [:h5 "Sollte ich teilnehmen?"][:p "Ja"]]]
    [:br]
@@ -147,8 +154,12 @@
 
    [:hr]
    [:h3 "Wetterbericht"]
-   [:video {:width "100%" :controls true :preload "auto"}
-    [:source {:src "vid/remscheiderwetter.mp4" :type "video/mp4"}]]
+   [:div.myIframe
+    [:iframe {:width 560
+              :height 315
+              :src "https://www.youtube-nocookie.com/embed/2wAOB4BYKsE"
+              :frameborder 0
+              :allowfullscreen true}]]
 
    [:hr]
    [:h3 "Anreise"]
