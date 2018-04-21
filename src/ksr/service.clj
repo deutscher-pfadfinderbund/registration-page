@@ -315,12 +315,6 @@
        [:h4 "Sonstige Informationen"]
        (extract-data db :anfahrt)])))
 
-(def data (db/get-participants))
-
-
-
-(group-by (juxt first count) data)
-
 
 ;; -----------------------------------------------------------------------------
 
