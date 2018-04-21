@@ -271,18 +271,55 @@
 ;; -----------------------------------------------------------------------------
 ;; Admin
 
-(defn users-to-rows []
+(defn- users->rows []
   (for [{:keys [name einheit stand]} (db/get-participants)
         :when (not (nil? name))]
     [:tr [:td name][:td einheit][:td stand]]))
 
+(defn- extract-data [db k]
+  (for [t (sort (remove empty? (map k db)))]
+    [:div.alert.alert-secondary t]))
+
+(defn- get-by-stand [db stand]
+  [:li (str stand ": ") (count (filter #(= stand %) (map :stand db)))])
+
 (defn admin-page [request]
   (with-header
-    [:h2 "Anmeldungen"]
-    [:br][:br]
-    [:table.table.table-striped
-     [:thead [:tr [:th "Name"][:th "Einheit"][:th "Stand"]]]
-     [:tbody (users-to-rows)]]))
+    (let [db (db/get-participants)]
+      [:div
+       [:h2 "Anmeldungen"]
+
+       [:ul
+        [:li [:strong "Anmeldungen Gesamt: " (count db)]]
+        (get-by-stand db "Jungwolf")
+        (get-by-stand db "Knappe")
+        (get-by-stand db "Späher")
+        (get-by-stand db "St.-Georgs-Knappe")
+        (get-by-stand db "Ordensritter")
+        (get-by-stand db "St.-Georgs-Ritter")
+        (get-by-stand db "Sonstiges")]
+
+       [:table.table.table-striped
+        [:thead [:tr [:th "Name"][:th "Einheit"][:th "Stand"]]]
+        [:tbody (users->rows)]]
+
+       [:br]
+       [:h4 "Die letzten Themen der Ständekreise"]
+       (extract-data db :das-letzte-thema-staendekreis)
+
+       [:br]
+       [:h4 "Orden ist für mich..."]
+       (extract-data db :orden-ist-fuer-mich)
+
+       [:br]
+       [:h4 "Sonstige Informationen"]
+       (extract-data db :anfahrt)])))
+
+(def data (db/get-participants))
+
+
+
+(group-by (juxt first count) data)
 
 
 ;; -----------------------------------------------------------------------------
