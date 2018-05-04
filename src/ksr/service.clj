@@ -86,30 +86,9 @@
 (def footer-nav
   [:div
    [:hr {:style {:margin "1rem"}}]
-   [:div.row
-    [:div.col-5
-     [:small.pull-left
-      "Diese Seite verwendet "
-      [:a {:href "https://deutscher-pfadfinderbund.de/impressum/#piwik"} "Piwik"]
-      " zur anonymen Datenerfassung"]]
-    [:div.col-7
-     [:div.text-right
-      [:span [:a.btn.btn-link {:href "https://deutscher-pfadfinderbund.de/impressum/"} "Impressum und Datenschutz"]]
-      [:span [:a.btn.btn-link {:href "/anmeldungen"} "Anmeldungen"]]]]]
-   [:script "
-     <!-- Piwik -->
-       var _paq = _paq || [];
-       /* tracker methods like 'setCustomDimension' should be called before 'trackPageView' */
-       _paq.push(['setCookieDomain', '*.ksr.deutscher-pfadfinderbund.de']);
-       _paq.push(['trackPageView']);
-       _paq.push(['enableLinkTracking']);
-       (function() {
-         var u='//christian-meter.de/piwik/';
-         _paq.push(['setTrackerUrl', u+'piwik.php']);
-         _paq.push(['setSiteId', '15']);
-         var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
-         g.type='text/javascript'; g.async=true; g.defer=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
-       })();"]])
+   [:div.text-right
+    [:span [:a.btn.btn-link {:href "https://deutscher-pfadfinderbund.de/impressum/"} "Impressum und Datenschutz"]]
+    [:span [:a.btn.btn-link {:href "/anmeldungen"} "Anmeldungen"]]]])
 
 (def footer
   [:div
