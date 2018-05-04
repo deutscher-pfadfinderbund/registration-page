@@ -12,7 +12,7 @@
   (ring-resp/response
    (hp/html5
     [:head
-     [:title "Anmeldung Knappen-Späher-Ritter-Lager 2018 in Remscheid"]
+     [:title "Knappen-Späher-Ritter-Lager 2018 in Remscheid"]
      [:meta {:charset "utf-8"}]
      [:meta {:http-equiv "X-UA-Compatible"
              :content "IE=edge"}]
@@ -29,7 +29,6 @@
         [:div.col-12.col-md-10
          [:img {:src "img/schriftzug-dpb.svg"
                 :style {:width "100%"}}]]]
-       [:h4.text-center {:style {:padding-top 0}} "Anmeldung zum"]
        [:h1.text-center "Knappen-Späher-Ritter Lager"]
        [:h4.text-center {:style {:padding-top 0}} "im sonnigen Remscheid"]
        [:br]
@@ -203,51 +202,14 @@
 
 (defn home-page [request]
   (with-header
-    [:div.text-center "Es sind nur noch " [:strong (+ 10 (rand-int 20))] " Plätze verfügbar!"]
-    [:br]
-    [:form#demo-form {:action "/registrieren" :method :POST}
-     [:div.form-group
-      [:label#name "Name *"]
-      [:input.form-control {:name "name" :required true}]]
-     (csrf-form-input request)
-     [:div.form-group
-      [:label "Einheit *"]
-      [:input.form-control {:name "einheit" :required true}]]
-     [:div.form-group
-      [:label "Stand *"]
-      [:select.form-control {:name "stand" :required true}
-       [:option {:value ""} ""]
-       [:option {:value "Jungwolf"} "Jungwolf"]
-       [:option {:value "Knappe"} "Knappe"]
-       [:option {:value "Späher"} "Späher"]
-       [:option {:value "St.-Georgs-Knappe"} "St.-Georgs-Knappe"]
-       [:option {:value "Ordensritter"} "Ordensritter"]
-       [:option {:value "St.-Georgs-Ritter"} "St.-Georgs-Ritter"]
-       [:option {:value "Sonstiges"} "Sonstiges"]]]
-     [:div.form-group
-      [:label "Essensbesonderheiten"]
-      [:select.form-control {:name "essen-besonderheiten"}
-       [:option {:value "keine Besonderheiten"} "keine Besonderheiten"]
-       [:option {:value "vegetarisch"} "vegetarisch"]
-       [:option {:value "vegan"} "vegan"]
-       [:option {:value "glutenfrei"} "glutenfrei"]
-       [:option {:value "lactosefrei"} "lactosefrei"]
-       [:option {:value "fructosefrei"} "fructosefrei"]
-       [:option {:value "histaminfrei"} "histaminfrei"]
-       [:option {:value "saccharosefrei"} "saccharosefrei"]
-       [:option {:value "sorbitfrei"} "sorbitfrei"]]]
-     [:div.form-group
-      [:label "Das letzte Thema in meinem Ständekreis war..."]
-      [:textarea.form-control {:name "das-letzte-thema-staendekreis" :rows 3}]]
-     [:div.form-group
-      [:label "Orden ist für mich..."]
-      [:textarea.form-control {:name "orden-ist-fuer-mich" :rows 3}]]
-     [:div.form-group
-      [:label "Sonstige Informationen"]
-      [:textarea.form-control {:name "anfahrt" :rows 3}]]
-     [:input {:class "btn btn-primary"
-              :type :submit
-              :value "Anmelden"}]]
+    [:p "Das Lager ist vorbei! Und es war super"]
+    [:p "Wer sich ein paar Bilder vom Lager anschauen will, kann sie sich für eine kurze Zeit hier herunterladen:"]
+    [:a.btn.btn-lg.btn-primary {:href "https://cloud.deutscher-pfadfinderbund.de/s/k9kwm2rLpQtr8x7"} "Zu den Bildern"]
+
+    [:br][:br]
+    [:p "Wer sich die selben Bilder in Gallerieform im Browser anschauen möchte, kann diesem Link folgen:"]
+    [:a.btn.btn-lg.btn-secondary {:href "https://cloud.deutscher-pfadfinderbund.de/apps/gallery/s/k9kwm2rLpQtr8x7#"} "Zur Gallerie"]
+
     footer))
 
 (defn register-page [{{:keys [name]} :form-params :as request}]
