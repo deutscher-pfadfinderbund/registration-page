@@ -30,7 +30,7 @@
          [:img {:src "img/schriftzug-dpb.svg"
                 :style {:width "100%"}}]]]
        [:h1.text-center "Knappen-Späher-Ritter Lager"]
-       [:h4.text-center {:style {:padding-top 0}} "im sonnigen Remscheid"]
+       [:h4.text-center.pt-0 "im sonnigen Remscheid"]
        [:br]
        body]]])))
 
@@ -270,7 +270,7 @@
   [_ {:keys [username password]}]
   (when-let [identity (get users username)]
     (when (= password (:password identity))
-      (dissoc identity :password ))))
+      (dissoc identity :password))))
 
 (def common-interceptors [(body-params/body-params) http/html-body (csrf/anti-forgery)])
 (def http-basic-interceptors (into common-interceptors [(gti/http-basic "... Nope." credentials)]))
