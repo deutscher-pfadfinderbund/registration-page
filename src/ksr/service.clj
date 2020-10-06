@@ -293,7 +293,7 @@
 
 ;; -----------------------------------------------------------------------------
 
-(s/def ::maybe-string (s/or :string string? :nil nil?))
+(s/def ::maybe-string (s/nilable string?))
 (s/def ::name ::maybe-string)
 (s/def ::einheit ::maybe-string)
 (s/def ::essen-besonderheiten ::maybe-string)
