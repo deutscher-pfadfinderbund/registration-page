@@ -1,6 +1,10 @@
 (ns ksr.db-test
   (:require [ksr.db :as db]
-            [clojure.test :refer [deftest is]]))
+            [clojure.test :refer [deftest is]]
+            [mount.core :as mount]))
+
+;; Korma is weird because it does its own state management. I dont like it. These tests should have mock-dbs
+(mount/start #'ksr.db/db-conn)
 
 (def participant
   {:name "kangaroo"

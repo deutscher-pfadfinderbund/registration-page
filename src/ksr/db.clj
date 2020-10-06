@@ -3,16 +3,16 @@
             [korma.core :as kc]
             [hiccup.util :as hutil]
             [clojure.spec.alpha :as s]
-            [ksr.db :as db]
-            [clojure.string :as string]))
+            [mount.core :refer [defstate]]))
 
-(kdb/defdb db (kdb/sqlite3 {:db "ksr.db"}))
+(defstate db-conn
+  :start (kdb/defdb db (kdb/sqlite3 {:db "ksr.db"})))
 
 (defn create-participants! []
-  (kc/exec-raw "CREATE TABLE participants(id integer PRIMARY KEY, name text, stand text, einheit text, essen_besonderheiten text, das_letzte_thema_staendekreis text, orden_ist_fuer_mich text, anfahrt text, created DATETIME DEFAULT CURRENT_TIMESTAMP);"))
+  (kc/exec-raw db-conn "CREATE TABLE participants(id integer PRIMARY KEY, name text, stand text, einheit text, essen_besonderheiten text, das_letzte_thema_staendekreis text, orden_ist_fuer_mich text, anfahrt text, created DATETIME DEFAULT CURRENT_TIMESTAMP);"))
 
 (defn drop-participants! []
-  (kc/exec-raw "DROP TABLE participants;"))
+  (kc/exec-raw db-conn "DROP TABLE participants;"))
 
 (kc/defentity participants
   (kc/entity-fields :name :einheit :stand :essen_besonderheiten
@@ -39,7 +39,7 @@
 (defn add-participant! [{:keys [name einheit stand essen-besonderheiten
                                 das-letzte-thema-staendekreis
                                 orden-ist-fuer-mich anfahrt] :as participant}]
-  (let [ps (set (db/get-participants))
+  (let [ps (set (get-participants))
         _ (create-db-if-not-exists!)]
     (if-not (contains? ps (dissoc participant :__anti-forgery-token))
       (kc/insert
