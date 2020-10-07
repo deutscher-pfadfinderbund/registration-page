@@ -1,37 +1,37 @@
-{:paths   ["src" "resources" "config" "classes"]
+{:paths ["src" "resources" "config" "classes"]
 
- :deps    {org.clojure/clojure            {:mvn/version "1.10.1"}
-           org.clojure/tools.namespace    {:mvn/version "1.0.0"}
-           org.clojure/test.check         {:mvn/version "1.1.0"}
+ :deps {org.clojure/clojure {:mvn/version "1.10.1"}
+        org.clojure/tools.namespace {:mvn/version "1.0.0"}
+        org.clojure/test.check {:mvn/version "1.1.0"}
 
-           hiccup/hiccup                  {:mvn/version "2.0.0-alpha2"}
+        hiccup/hiccup {:mvn/version "2.0.0-alpha2"}
 
-           korma/korma                    {:mvn/version "0.4.3"}
-           org.xerial/sqlite-jdbc         {:mvn/version "3.32.3.2"}
+        korma/korma {:mvn/version "0.4.3"}
+        org.xerial/sqlite-jdbc {:mvn/version "3.32.3.2"}
 
-           io.pedestal/pedestal.service   {:mvn/version "0.5.8"}
-           geheimtur/geheimtur            {:mvn/version "0.4.0"}
+        io.pedestal/pedestal.service {:mvn/version "0.5.8"}
+        geheimtur/geheimtur {:mvn/version "0.4.0"}
 
-           clj-http/clj-http              {:mvn/version "3.10.3"}
-           org.clojure/data.json          {:mvn/version "1.0.0"}
+        clj-http/clj-http {:mvn/version "3.10.3"}
+        org.clojure/data.json {:mvn/version "1.0.0"}
 
-           io.pedestal/pedestal.jetty     {:mvn/version "0.5.8"}
-           ch.qos.logback/logback-classic {:mvn/version "1.2.3"
-                                           :exclusions  [org.slf4j/slf4j-api]}
-           org.slf4j/jul-to-slf4j         {:mvn/version "1.7.30"}
-           org.slf4j/jcl-over-slf4j       {:mvn/version "1.7.30"}
-           org.slf4j/log4j-over-slf4j     {:mvn/version "1.7.30"}
+        io.pedestal/pedestal.jetty {:mvn/version "0.5.8"}
+        ch.qos.logback/logback-classic {:mvn/version "1.2.3"
+                                        :exclusions [org.slf4j/slf4j-api]}
+        org.slf4j/jul-to-slf4j {:mvn/version "1.7.30"}
+        org.slf4j/jcl-over-slf4j {:mvn/version "1.7.30"}
+        org.slf4j/log4j-over-slf4j {:mvn/version "1.7.30"}
 
-           mount/mount                    {:mvn/version "0.1.16"}}
+        mount/mount {:mvn/version "0.1.16"}}
 
  :aliases {:test {:extra-paths ["test"]
-                  :main-opts   ["-m" "kaocha.runner"]
-                  :extra-deps  {lambdaisland/kaocha {:mvn/version "1.0.681"}}}
+                  :main-opts ["-m" "kaocha.runner"]
+                  :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.681"}}}
 
            ;; See https://github.com/clojure-emacs/cider-nrepl/blob/master/deps.edn for Emacs support
-           :dev       {:extra-paths ["dev" "test"]
-                       :jvm-opts    ["-XX:-OmitStackTraceInFastThrow"]
-                       :extra-deps  {io.pedestal/pedestal.service-tools {:mvn/version "0.5.8"}}}
+           :dev {:extra-paths ["dev" "test"]
+                 :jvm-opts ["-XX:-OmitStackTraceInFastThrow"]
+                 :extra-deps {io.pedestal/pedestal.service-tools {:mvn/version "0.5.8"}}}
 
-           :uberjar  {:extra-deps {uberdeps/uberdeps {:mvn/version "1.0.2"}}
-                      :main-opts  ["-m" "uberdeps.uberjar"]}}}
+           :uberjar {:extra-deps {uberdeps/uberdeps {:mvn/version "1.0.2"}}
+                     :main-opts ["-m" "uberdeps.uberjar"]}}}
