@@ -1,7 +1,6 @@
 FROM java:8-alpine
-MAINTAINER Your Name <you@example.com>
 
-ADD target/ksr-0.0.1-SNAPSHOT-standalone.jar /ksr/app.jar
+ADD target/ksr.jar /ksr/app.jar
 
 EXPOSE 8080
 
