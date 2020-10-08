@@ -95,6 +95,6 @@
                        :veranstaltung/art veranstaltung})))
 
 (comment
+  ;; Notwendig zum Starten der Datenbank
   (init!)
-  (pfadi-eintragen! pfadi)
   nil)
