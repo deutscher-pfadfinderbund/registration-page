@@ -1,5 +1,8 @@
 # Project related
 
+*.css
+node_modules/
+
 # Java related
 pom.xml
 pom.xml.asc

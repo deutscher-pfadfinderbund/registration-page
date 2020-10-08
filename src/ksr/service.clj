@@ -18,7 +18,6 @@
                :content "IE=edge"}]
        [:meta {:name "viewport"
                :content "width=device-width, initial-scale=1"}]
-       (hp/include-css "css/bootstrap.min.css")
        (hp/include-css "css/main.css")]
       [:body
        [:div.container.pb-5
@@ -63,15 +62,14 @@
        {:src "img/jhs.gif"
         :style {:max-width "300px"}}]]]
     [:div.col-12.col-md-6
-     [:p "Organisiert wird das Lager von eurer Lieblingsjungenschaft, der
-     Jungenschaft Hohenstaufen. Es findet bei uns in Remscheid statt, also zieht
-     euch wetterfest an."]
+     [:p "Organisiert wird das digitale Lager von eurer Lieblingsjungenschaft, der
+     Jungenschaft Hohenstaufen."]
      [:p "Bitte nehmt uns ein wenig Arbeit ab und meldet euch über das Formular
      an. Zur besseren Einschätzung der Teilnehmer finden wir die Einzelanmeldung
      sinnvoll."]
      [:p "Sollte es Probleme geben, wovon wir mal nicht ausgehen, könnt ihr euch
      bei rambo melden: "
-      [:a {:href "ksr@dpb-remscheid.de"} "ksr@dpb-remscheid.de"] "."]
+      [:a {:href "vogt@jungenbund.de"} "vogt@jungenbund.de"] "."]
      [:p "Wir freuen uns auf euch!"]]]
 
    footer-nav])

@@ -1,0 +1,11 @@
+{
+  "name": "registration-page",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:deutscher-pfadfinderbund/registration-page.git",
+  "author": "Christian Meter <cmeter@googlemail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "bootstrap": "^4.5.2"
+  }
+}
