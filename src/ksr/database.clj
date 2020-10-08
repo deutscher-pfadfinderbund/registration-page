@@ -1,5 +1,6 @@
 (ns ksr.database
-  (:require [datomic.client.api :as d])
+  (:require [datomic.client.api :as d]
+            [ksr.models :as models])
   (:import (java.io File)))
 
 (defn- create-directory!
@@ -50,7 +51,10 @@
 (defn- create-schema!
   "Creates the schema for discussions inside the database."
   [connection]
-  (d/transact connection {:tx-data models/datomic-schema}))
+  (d/transact connection {:tx-data models/schema}))
+
+
+;; -----------------------------------------------------------------------------
 
 (defn init!
   "Initialization function, which does everything needed at a fresh app-install.
