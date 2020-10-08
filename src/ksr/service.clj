@@ -51,7 +51,8 @@
     [:div.col-md-1]
     [:div.col-12.col-md-6
      [:h3 "Eckdaten"]
-     [:h5 "Wann?"] [:p "27.04. - 29.04.2018"]
+     [:h5 "Wann?"] [:p "7. November 2020, 10 Uhr"]
+     [:h5 "Wo?"] [:p "Digital, wir verwenden BigBlueButton. Link kommt per Mail."]
      [:h5 "Sollte ich teilnehmen?"] [:p "Ja"]]]
    [:br]
    [:h3 "Organisation"]
@@ -82,7 +83,27 @@
 
 (defn home-page [request]
   (with-header
-
+    [:form {:action "/registrieren" :method :POST}
+     [:div.form-group
+      [:label#name "Name *"]
+      [:input.form-control {:name "name" :required true}]]
+     (csrf-form-input request)
+     [:div.form-group
+      [:label "Einheit / Gruppierung *"]
+      [:input.form-control {:name "einheit" :required true}]]
+     [:div.form-group
+      [:label "E-Mail *"]
+      [:input.form-control {:name "mail" :required true :type "email"}]]
+     [:div.form-group
+      [:label "Ich möchte an folgendem teilnehmen *"]
+      [:select.form-control {:name "woranteilnehmen" :required true}
+       [:option {:value ""} ""]
+       [:option {:value "Bundesjungenrat"} "Bundesjungenrat"]
+       [:option {:value "Diskussionsrunde am Nachmittag"} "Diskussionsrunde am Nachmittag"]
+       [:option {:value "Beides"} "Beides"]]]
+     [:input {:class "btn btn-primary"
+              :type :submit
+              :value "Anmelden"}]]
     footer))
 
 (defn register-page [{{:keys [name]} :form-params :as request}]
