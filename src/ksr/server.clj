@@ -3,7 +3,6 @@
   (:require [io.pedestal.http :as server]
             [io.pedestal.http.route :as route]
             [ksr.service :as service]
-            [ksr.db :refer [db-conn]]
             [mount.core :refer [defstate]]))
 
 ;; This is an adapted service map, that can be started and stopped

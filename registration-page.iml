@@ -55,7 +55,6 @@
     <orderEntry type="library" name="Deps: org.eclipse.jetty.websocket/websocket-client:9.4.18.v20190429" level="project" />
     <orderEntry type="library" name="Deps: com.fasterxml.jackson.core/jackson-core:2.9.6" level="project" />
     <orderEntry type="library" name="Deps: clj-time:0.14.3" level="project" />
-    <orderEntry type="library" name="Deps: com.mchange/c3p0:0.9.5.2" level="project" />
     <orderEntry type="library" name="Deps: org.eclipse.jetty.websocket/websocket-servlet:9.4.18.v20190429" level="project" />
     <orderEntry type="library" name="Deps: aero:1.1.6" level="project" />
     <orderEntry type="library" name="Deps: clj-http:3.10.3" level="project" />
@@ -83,9 +82,7 @@
     <orderEntry type="library" name="Deps: com.datomic/client-impl-shared:0.8.80" level="project" />
     <orderEntry type="library" name="Deps: orchestra:2020.07.12-1" level="project" />
     <orderEntry type="library" name="Deps: com.cognitect/transit-clj:0.8.313" level="project" />
-    <orderEntry type="library" name="Deps: org.clojure/java.jdbc:0.6.1" level="project" />
     <orderEntry type="library" name="Deps: io.opentracing/opentracing-noop:0.33.0" level="project" />
-    <orderEntry type="library" name="Deps: com.mchange/mchange-commons-java:0.2.11" level="project" />
     <orderEntry type="library" name="Deps: com.datomic/query-support:0.8.27" level="project" />
     <orderEntry type="library" name="Deps: crypto-random:1.2.0" level="project" />
     <orderEntry type="library" name="Deps: ring/ring-codec:1.1.1" level="project" />
@@ -106,7 +103,6 @@
     <orderEntry type="library" name="Deps: javax.servlet/javax.servlet-api:3.1.0" level="project" />
     <orderEntry type="library" name="Deps: potemkin:0.4.5" level="project" />
     <orderEntry type="library" name="Deps: mount:0.1.16" level="project" />
-    <orderEntry type="library" name="Deps: org.xerial/sqlite-jdbc:3.32.3.2" level="project" />
     <orderEntry type="library" name="Deps: org.slf4j/slf4j-api:1.7.30" level="project" />
     <orderEntry type="library" name="Deps: org.clojure/test.check:1.1.0" level="project" />
     <orderEntry type="library" name="Deps: org.eclipse.jetty.websocket/websocket-server:9.4.18.v20190429" level="project" />
@@ -118,7 +114,6 @@
     <orderEntry type="library" name="Deps: hawk:0.2.11" level="project" />
     <orderEntry type="library" name="Deps: tech.droit/clj-diff:1.0.1" level="project" />
     <orderEntry type="library" name="Deps: org.clojure/data.priority-map:0.0.7" level="project" />
-    <orderEntry type="library" name="Deps: korma:0.4.3" level="project" />
     <orderEntry type="library" name="Deps: org.eclipse.jetty/jetty-server:9.4.18.v20190429" level="project" />
     <orderEntry type="library" name="Deps: org.apache.httpcomponents/httpmime:4.5.10" level="project" />
     <orderEntry type="library" name="Deps: org.slf4j/log4j-over-slf4j:1.7.30" level="project" />
