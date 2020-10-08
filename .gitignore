@@ -2,6 +2,7 @@
 
 *.css
 node_modules/
+local_jars/
 
 # Java related
 pom.xml

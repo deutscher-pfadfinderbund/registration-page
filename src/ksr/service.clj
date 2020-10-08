@@ -120,7 +120,7 @@
           "Der Datensatz, den du eintragen wolltest, existiert schon in unserer
           Datenbank. Vielleicht hast du versucht dich doppelt anzumelden... Bei
           Problemen kontaktiere rambo unter dieser Adresse: "
-          [:a {:href "ksr@dpb-remscheid.de"} "ksr@dpb-remscheid.de"]]
+          [:a {:href "vogt@jungenbund.de"} "vogt@jungenbund.de"]]
          [:p "Gehe hier " [:a {:href "/"} "zurück"] " und probiere es erneut."]]))))
 
 

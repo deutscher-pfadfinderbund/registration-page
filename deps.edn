@@ -4,6 +4,8 @@
         org.clojure/tools.namespace {:mvn/version "1.0.0"}
         org.clojure/test.check {:mvn/version "1.1.0"}
 
+        com.datomic/client-pro {:mvn/version "0.9.63"}
+
         hiccup/hiccup {:mvn/version "2.0.0-alpha2"}
 
         korma/korma {:mvn/version "0.4.3"}
@@ -28,10 +30,15 @@
                   :main-opts ["-m" "kaocha.runner"]
                   :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.681"}}}
 
-           ;; See https://github.com/clojure-emacs/cider-nrepl/blob/master/deps.edn for Emacs support
            :dev {:extra-paths ["dev" "test"]
                  :jvm-opts ["-XX:-OmitStackTraceInFastThrow"]
-                 :extra-deps {io.pedestal/pedestal.service-tools {:mvn/version "0.5.8"}}}
+                 :extra-deps {io.pedestal/pedestal.service-tools {:mvn/version "0.5.8"}
+                              com.datomic/dev-local {:local/root "local_jars/dev-local/dev-local-0.9.203.jar"}}}
 
-           :uberjar {:extra-deps {uberdeps/uberdeps {:mvn/version "1.0.2"}}
-                     :main-opts ["-m" "uberdeps.uberjar"]}}}
+           :uberjar {:extra-deps {uberdeps/uberdeps {:mvn/version "1.0.2"}
+                                  com.datomic/dev-local {:local/root "local_jars/dev-local/dev-local-0.9.203.jar"}}
+                     :main-opts ["-m" "uberdeps.uberjar"]}
+
+           :clj-kondo
+           {:extra-deps {clj-kondo/clj-kondo {:mvn/version "RELEASE"}}
+            :main-opts ["-m" "clj-kondo.main"]}}}
