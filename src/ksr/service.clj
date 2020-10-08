@@ -6,7 +6,9 @@
             [hiccup.page :as hp]
             [clojure.spec.alpha :as s]
             [geheimtur.interceptor :as gti]
-            [ksr.db :as db]))
+            [ksr.db :as db]
+            [ksr.database :as database]))
+
 
 (defn with-header [& body]
   (ring-resp/response
@@ -97,17 +99,16 @@
      [:div.form-group
       [:label "Ich möchte an folgendem teilnehmen *"]
       [:select.form-control {:name "woranteilnehmen" :required true}
-       [:option {:value ""} ""]
        [:option {:value "Bundesjungenrat"} "Bundesjungenrat"]
-       [:option {:value "Diskussionsrunde am Nachmittag"} "Diskussionsrunde am Nachmittag"]
-       [:option {:value "Beides"} "Beides"]]]
+       [:option {:value "Diskussionsrunde"} "Diskussionsrunde am Nachmittag"]
+       [:option {:value "Beides"} "Bundesjungenrat und Diskussionsrunde"]]]
      [:input {:class "btn btn-primary"
               :type :submit
               :value "Anmelden"}]]
     footer))
 
 (defn register-page [{{:keys [name]} :form-params :as request}]
-  (let [status (db/add-participant! (:form-params request))]
+  (let [status (database/pfadi-verarbeiten (:form-params request))]
     (with-header
       (if-not (= :duplicate status)
         [:div

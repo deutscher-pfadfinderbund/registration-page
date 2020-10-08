@@ -3,6 +3,7 @@
 *.css
 node_modules/
 local_jars/
+.datomic/
 
 # Java related
 pom.xml

@@ -53,6 +53,11 @@
   [connection]
   (d/transact connection {:tx-data models/schema}))
 
+(defn transact
+  "Shorthand for transaction."
+  [data]
+  (d/transact (new-connection) {:tx-data data}))
+
 
 ;; -----------------------------------------------------------------------------
 
@@ -70,3 +75,26 @@
    (when-not (= :peer-server (-> (:datomic config) :server-type))
      (create-database!))
    (create-schema! (new-connection))))
+
+
+;; -----------------------------------------------------------------------------
+
+(defn pfadi-eintragen! [pfadi]
+  (transact [pfadi]))
+
+(defn pfadi-verarbeiten
+  "Bekommt den Request von der Website und übersetzt das Formular."
+  [{:keys [name einheit mail woranteilnehmen]}]
+  (let [veranstaltung (case woranteilnehmen
+                        "Bundesjungenrat" :veranstaltung.art/bundesjungenrat
+                        "Diskussionsrunde" :veranstaltung.art/gesprächsrunde
+                        "Beides" :veranstaltung.art/beides)]
+    (pfadi-eintragen! {:pfadi/name name
+                       :pfadi/gruppierung einheit
+                       :pfadi/mail mail
+                       :veranstaltung/art veranstaltung})))
+
+(comment
+  (init!)
+  (pfadi-eintragen! pfadi)
+  nil)
