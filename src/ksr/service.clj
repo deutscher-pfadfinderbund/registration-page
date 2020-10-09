@@ -107,7 +107,8 @@
               :value "Anmelden"}]]
     footer))
 
-(defn register-page [{{:keys [name]} :form-params}]
+(defn register-page [{{:keys [name]} :form-params :as request}]
+  (database/pfadi-verarbeiten (:form-params request))
   (with-header
     [:div
      [:div.alert.alert-success {:style {:margin "1rem 0"}}
