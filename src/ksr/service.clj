@@ -134,8 +134,8 @@
 ;; -----------------------------------------------------------------------------
 
 (def users
-  (let [user (or (System/getenv "KSR_USER") "ksr")
-        pass (or (System/getenv "KSR_PASS") "diskette")]
+  (let [user (or (System/getenv "ADMIN_USER") "ksr")
+        pass (or (System/getenv "ADMIN_PASSWORD") "diskette")]
     {user {:password pass
            :roles #{(keyword user)}
            :full-name "Knäppchen"}}))
