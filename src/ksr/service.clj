@@ -47,7 +47,7 @@
        {:src "img/jhs.gif"
         :style {:max-width "300px"}}]]]
     [:div.col-12.col-md-6
-     [:p "Organisiert wird das digitale Lager von eurer Lieblingsjungenschaft, der
+     [:p "Organisiert wird das digitale Lager von der Jungenbundführung und von eurer Lieblingsjungenschaft, der
      Jungenschaft Hohenstaufen."]
      [:p "Bitte nehmt uns ein wenig Arbeit ab und meldet euch über das Formular
      an. Zur besseren Einschätzung der Teilnehmer finden wir die Einzelanmeldung
