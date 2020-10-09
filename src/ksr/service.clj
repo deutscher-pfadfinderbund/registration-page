@@ -21,9 +21,9 @@
        (hp/include-css "css/main.css")
        (hp/include-js "js/modernizr-custom.js")]
       [:body
-       [:div.container.pb-5
+       [:div.container.pb-sm-5
         [:div.row
-         [:div.offset-1.offset-md-1.col-10.col-md-10.col-sm-12.card.card-3
+         [:div.offset-md-1.col-12.col-md-10.col-sm-12.card.card-3
           [:div.text-center.pb-5
            [:img.w-75 {:src "img/schriftzug-dpb.svg"}]]
           [:h1.text-center.pb-5 "Jungenbundführerlager 2020"]
