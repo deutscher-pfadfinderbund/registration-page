@@ -107,22 +107,13 @@
               :value "Anmelden"}]]
     footer))
 
-(defn register-page [{{:keys [name]} :form-params :as request}]
-  (let [status (database/pfadi-verarbeiten (:form-params request))]
-    (with-header
-      (if-not (= :duplicate status)
-        [:div
-         [:div.alert.alert-success {:style {:margin "1rem 0"}}
-          "Du hast dich erfolgreich zum Lager angemeldet!"]
-         [:p "Nun steht dein Name auf unserer Liste, " name ". Wir freuen uns schon auf dich!"]
-         [:p "Gehe hier " [:a {:href "/"} "zurück"] ", um dir die anderen Informationen durchzulesen oder um eine weitere Person anzumelden."]]
-        [:div
-         [:div.alert.alert-danger
-          "Der Datensatz, den du eintragen wolltest, existiert schon in unserer
-          Datenbank. Vielleicht hast du versucht dich doppelt anzumelden... Bei
-          Problemen kontaktiere rambo unter dieser Adresse: "
-          [:a {:href "mailto:vogt@jungenbund.de"} "vogt@jungenbund.de"]]
-         [:p "Gehe hier " [:a {:href "/"} "zurück"] " und probiere es erneut."]]))))
+(defn register-page [{{:keys [name]} :form-params}]
+  (with-header
+    [:div
+     [:div.alert.alert-success {:style {:margin "1rem 0"}}
+      "Du hast dich erfolgreich zum Lager angemeldet!"]
+     [:p "Nun steht dein Name auf unserer Liste, " name ". Wir freuen uns schon auf dich!"]
+     [:p "Gehe hier " [:a {:href "/"} "zurück"] ", um dir die anderen Informationen durchzulesen oder um eine weitere Person anzumelden."]]))
 
 
 ;; -----------------------------------------------------------------------------
@@ -164,8 +155,7 @@
   (let [user (or (System/getenv "ADMIN_USER") "ksr")
         pass (or (System/getenv "ADMIN_PASSWORD") "diskette")]
     {user {:password pass
-           :roles #{(keyword user)}
-           :full-name "Knäppchen"}}))
+           :roles #{:admin}}}))
 
 (defn credentials
   [_ {:keys [username password]}]
@@ -179,7 +169,7 @@
 (def routes #{["/" :get (conj common-interceptors `home-page)]
               ["/registrieren" :post (conj common-interceptors `register-page)]
               ["/anmeldungen" :get (into http-basic-interceptors
-                                         [(gti/guard :silent? false :roles #{:ksr}) `admin-page])]})
+                                         [(gti/guard :silent? false :roles #{:admin}) `admin-page])]})
 
 (def ^:private port
   (let [from-env (System/getenv "PORT")]
