@@ -40,13 +40,12 @@
   [:footer
    [:hr {:style {:margin-top "3rem"}}]
    [:h3 "Organisation"]
-   [:div.row
-    [:div.col-12.col-md-4
-     [:div.card.card-1
-      [:img.img-fluid
-       {:src "img/jhs.gif"
-        :style {:max-width "300px"}}]]]
-    [:div.col-12.col-md-6
+   [:div.row.d-flex.justify-content-center
+    [:div.col-4.col-md-2
+     [:img.card-img.py-2
+      {:src "/img/Hohenstaufen_mini.svg"
+       :style {:max-width "300px"}}]]
+    [:div.col-12.col-md-10
      [:p "Organisiert wird das digitale Lager von der Jungenbundführung und von eurer Lieblingsjungenschaft, der
      Jungenschaft Hohenstaufen."]
      [:p "Bitte nehmt uns ein wenig Arbeit ab und meldet euch über das Formular
@@ -170,7 +169,7 @@
 (def routes #{["/" :get (conj common-interceptors `home-page)]
               ["/registrieren" :post (conj common-interceptors `register-page)]
               ["/anmeldungen" :get (into http-basic-interceptors
-                                         [(gti/guard :silent? false :roles #{:admin}) `admin-page])]})
+                                     [(gti/guard :silent? false :roles #{:admin}) `admin-page])]})
 
 (def ^:private port
   (let [from-env (System/getenv "PORT")]
