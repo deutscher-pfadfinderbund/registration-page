@@ -1,5 +1,4 @@
 (ns ksr.server
-  (:gen-class)                                              ; for -main method in uberjar
   (:require [io.pedestal.http :as server]
             [io.pedestal.http.route :as route]
             [ksr.service :as service]
@@ -31,8 +30,8 @@
       server/start))
 
 (defstate service
-          :start (run-dev)
-          :stop (server/stop service))
+  :start (run-dev)
+  :stop (server/stop service))
 
 (defn -main
   "The entry-point for 'lein run'"
