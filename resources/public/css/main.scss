@@ -1,10 +1,18 @@
-.webp body {
-  background-image: url("/img/background.webp");
-}
+$enable-responsive-font-sizes: true;
 
-.no-webp body {
-  // For Safari Support
-  background-image: url("/img/background.jpg");
+@import "../node_modules/bootstrap/scss/functions";
+@import "../node_modules/bootstrap/scss/variables";
+@import "../node_modules/bootstrap/scss/mixins";
+
+@include media-breakpoint-up(sm) {
+  .webp body {
+    background-image: url("/img/background.webp");
+  }
+
+  .no-webp body {
+    // For Safari Support
+    background-image: url("/img/background.jpg");
+  }
 }
 
 body {
@@ -23,7 +31,9 @@ body {
   background: #fff;
   border-radius: 2px;
   display: inline-block;
-  margin-top: 5rem;
+  @include media-breakpoint-up(sm) {
+    margin-top: 5rem;
+  }
   position: relative;
 }
 
@@ -80,16 +90,6 @@ img.hover {
     filter: grayscale(0%);
 
     /* FF 35+ */
-  }
-}
-
-@media (max-width: 575px) {
-  h1 {
-    font-size: 1.5rem !important;
-  }
-
-  h4 {
-    font-size: 1.1rem !important;
   }
 }
 
