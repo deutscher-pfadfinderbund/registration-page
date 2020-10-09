@@ -74,7 +74,7 @@
             :target "_blank"}
         [:picture.hover.img-fluid
          [:source {:srcset "pdf/einladung.webp" :type "image/webp"}]
-         [:img {:src "pdf/einladung.png"}]]]]]
+         [:img.img-fluid {:src "pdf/einladung.png"}]]]]]
      [:div.col-12.offset-md-1.col-md-6
       [:h3 "Eckdaten"]
       [:h5 "Wann?"] [:p "7. November 2020, 10 Uhr"]
