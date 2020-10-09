@@ -1,0 +1,31 @@
+name: Build Docker Image
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build-image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Download dev-local
+        run: |
+          wget -O ${{ secrets.DEV_LOCAL_FILENAME }} ${{ secrets.DEV_LOCAL_ADDRESS }}
+          mkdir -p local_jars/dev-local
+          mv ${{ secrets.DEV_LOCAL_FILENAME }} local_jars/dev-local
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v1.1.0
+        with:
+          username: n2o
+          password: ${{ secrets.ACCESS_TOKEN }}
+          registry: ghcr.io
+          repository: deutscher-pfadfinderbund/registration-page
+          # Comma-delimited list of tags. These will be added to the registry/repository to form the image's tags
+          tags: latest
+          # Automatically tags the built image with the git reference as per the readme
+          tag_with_ref: false
+          # Automatically tags the built image with the git short SHA as per the readme
+          tag_with_sha: false
+          add_git_labels: false

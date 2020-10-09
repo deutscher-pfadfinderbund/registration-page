@@ -3,3 +3,4 @@
 .cpcache/
 .idea/
 target/
+node_modules/
