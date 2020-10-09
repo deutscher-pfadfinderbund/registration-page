@@ -8,11 +8,8 @@ RUN clojure -Sdeps '{:mvn/local-repo "./.m2/repository"}' -e "(prn \"Downloading
 RUN apk add yarn make
 RUN yarn global add sass
 
-COPY package.json .
-COPY yarn.lock .
-RUN yarn install
-
 COPY . .
+RUN yarn install
 
 RUN sass ./resources/public/css/main.scss ./resources/public/css/main.css --no-source-map --style compressed
 
