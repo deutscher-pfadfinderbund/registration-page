@@ -25,11 +25,12 @@
          [:div.offset-1.offset-md-1.col-10.col-md-10.col-sm-12.card.card-3
           [:div.text-center.pb-5
            [:img.w-75 {:src "img/schriftzug-dpb.svg"}]]
-          [:h1.text-center "Jungenbundführerlager 2020"]
+          [:h1.text-center.pb-5 "Jungenbundführerlager 2020"]
           body]]]])))
 
 (def footer-nav
   [:section
+   (hp/include-js "js/modernizr-custom.js")
    [:hr {:style {:margin "1rem"}}]
    [:div.text-right
     [:span [:a.btn.btn-link {:href "https://deutscher-pfadfinderbund.de/impressum/"} "Impressum und Datenschutz"]]
@@ -38,23 +39,6 @@
 (def footer
   [:footer
    [:hr {:style {:margin-top "3rem"}}]
-   [:h2 "Informationen"]
-   [:div.row
-    [:div.col-12.col-md-5
-     [:h3 "Einladung"]
-     [:div.card.card-1
-      [:a {:href "pdf/einladung-ksr.pdf"
-           :target "_blank"}
-       [:img.hover.img-fluid
-        {:src "pdf/einladung-ksr.png"
-         :style {:width "300px"}}]]]]
-    [:div.col-md-1]
-    [:div.col-12.col-md-6
-     [:h3 "Eckdaten"]
-     [:h5 "Wann?"] [:p "7. November 2020, 10 Uhr"]
-     [:h5 "Wo?"] [:p "Digital, wir verwenden BigBlueButton. Link kommt per Mail."]
-     [:h5 "Sollte ich teilnehmen?"] [:p "Ja"]]]
-   [:br]
    [:h3 "Organisation"]
    [:div.row
     [:div.col-12.col-md-4
@@ -70,7 +54,7 @@
      sinnvoll."]
      [:p "Sollte es Probleme geben, wovon wir mal nicht ausgehen, könnt ihr euch
      bei rambo melden: "
-      [:a {:href "vogt@jungenbund.de"} "vogt@jungenbund.de"] "."]
+      [:a {:href "mailto:vogt@jungenbund.de"} "vogt@jungenbund.de"] "."]
      [:p "Wir freuen uns auf euch!"]]]
 
    footer-nav])
@@ -83,6 +67,24 @@
 
 (defn home-page [request]
   (with-header
+    [:div.row
+     [:div.col-12.col-md-5
+      [:h3 "Einladung"]
+      [:div.card.card-1
+       [:a {:href "pdf/einladung.pdf"
+            :target "_blank"}
+        [:picture.hover.img-fluid
+         [:source {:srcset "pdf/einladung.webp" :type "image/webp"}]
+         [:img {:src "pdf/einladung.png"}]]]]]
+     [:div.col-12.offset-md-1.col-md-6
+      [:h3 "Eckdaten"]
+      [:h5 "Wann?"] [:p "7. November 2020, 10 Uhr"]
+      [:h5 "Wo?"] [:p "Digital, wir verwenden BigBlueButton. Link kommt per Mail."]
+      [:h5 "Sollte ich teilnehmen?"] [:p "Ja"]]]
+
+    [:h2.pt-5 "Anmeldung"]
+    [:p "Melde dich hier an für das digitale Jungenbundführerlager! Wir benötigen die Daten, um dir die Zugangsdaten und
+    weitere Informationen schicken können."]
     [:form {:action "/registrieren" :method :POST}
      [:div.form-group
       [:label#name "Name *"]
@@ -119,7 +121,7 @@
           "Der Datensatz, den du eintragen wolltest, existiert schon in unserer
           Datenbank. Vielleicht hast du versucht dich doppelt anzumelden... Bei
           Problemen kontaktiere rambo unter dieser Adresse: "
-          [:a {:href "vogt@jungenbund.de"} "vogt@jungenbund.de"]]
+          [:a {:href "mailto:vogt@jungenbund.de"} "vogt@jungenbund.de"]]
          [:p "Gehe hier " [:a {:href "/"} "zurück"] " und probiere es erneut."]]))))
 
 
@@ -154,13 +156,19 @@
               ["/anmeldungen" :get (into http-basic-interceptors
                                          [(gti/guard :silent? false :roles #{:ksr}) `admin-page])]})
 
+(def ^:private port
+  (let [from-env (System/getenv "PORT")]
+    (if from-env
+      (Integer/parseInt from-env)
+      8080)))
+
 (def service {:env :prod
               ::http/enable-csrf {}
               ::http/routes routes
               ::http/resource-path "/public"
               ::http/type :jetty
               ::http/host "0.0.0.0"
-              ::http/port 8080
+              ::http/port port
               ::http/secure-headers {:content-security-policy-settings {:object-src "none"}}
               ::http/container-options {:h2c? true
                                         :h2? false

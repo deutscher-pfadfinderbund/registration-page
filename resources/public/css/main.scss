@@ -1,5 +1,13 @@
-body {
+.no-webp body {
+  // For Safari Support
+  background: url("../img/background.jpg") no-repeat center center fixed;
+}
+
+.webp body {
   background: url("../img/background.webp") no-repeat center center fixed;
+}
+
+body {
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;

@@ -9,6 +9,7 @@ services:
     volumes:
       - ./persist/datomic:/code/.datomic
     environment:
+      - PORT
       - ADMIN_USER
       - ADMIN_PASSWORD
     labels:
