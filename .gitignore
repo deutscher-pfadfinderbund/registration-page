@@ -1,6 +1,7 @@
 # Project related
 
 *.css
+*.css.map
 node_modules/
 local_jars/
 .datomic/
