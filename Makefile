@@ -6,3 +6,6 @@ run:
 
 jar:
 	clojure -A:uberjar
+
+image:
+	docker build -t ghcr.io/deutscher-pfadfinderbund/registration-page .

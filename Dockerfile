@@ -1,4 +1,4 @@
-FROM clojure:openjdk-14-tools-deps-alpine
+FROM clojure:openjdk-14-tools-deps-alpine AS build
 
 WORKDIR /code
 
@@ -21,5 +21,4 @@ EXPOSE 8080
 
 RUN clojure -Sdeps '{:mvn/local-repo "./.m2/repository"}' -A:uberjar
 
-# When using uberjar:
 CMD ["java", "-cp", "target/registration-page.jar", "clojure.main", "-m", "ksr.core"]
