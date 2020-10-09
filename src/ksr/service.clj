@@ -18,7 +18,8 @@
                :content "IE=edge"}]
        [:meta {:name "viewport"
                :content "width=device-width, initial-scale=1"}]
-       (hp/include-css "css/main.css")]
+       (hp/include-css "css/main.css")
+       (hp/include-js "js/modernizr-custom.js")]
       [:body
        [:div.container.pb-5
         [:div.row
@@ -30,7 +31,6 @@
 
 (def footer-nav
   [:section
-   (hp/include-js "js/modernizr-custom.js")
    [:hr {:style {:margin "1rem"}}]
    [:div.text-right
     [:span [:a.btn.btn-link {:href "https://deutscher-pfadfinderbund.de/impressum/"} "Impressum und Datenschutz"]]
@@ -147,7 +147,15 @@
             [:td (:pfadi/gruppierung pfadi)]
             [:td (:pfadi/mail pfadi)]
             [:td (:veranstaltung/art pfadi)]
-            [:td (:erstellt pfadi)]])]])]))
+            [:td (:erstellt pfadi)]])]])]
+    (hp/include-css "node_modules/datatables/media/css/jquery.dataTables.min.css")
+    (hp/include-js "node_modules/jquery/dist/jquery.min.js")
+    (hp/include-js "node_modules/datatables/media/js/jquery.dataTables.min.js")
+    [:script "
+    $(document).ready(function() {
+        $('table').DataTable();
+    });
+    "]))
 
 
 ;; -----------------------------------------------------------------------------
