@@ -10,7 +10,6 @@ RUN yarn global add sass
 
 COPY package.json .
 COPY yarn.lock .
-COPY resources/public/node_modules/ resources/public/node_modules
 RUN yarn install
 
 COPY . .
