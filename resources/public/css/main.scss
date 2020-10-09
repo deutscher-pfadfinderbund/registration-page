@@ -1,10 +1,10 @@
-.no-webp body {
-  // For Safari Support
-  background: url("../img/background.jpg") no-repeat center center fixed;
+.webp body {
+  background-image: url("/img/background.webp");
 }
 
-.webp body {
-  background: url("../img/background.webp") no-repeat center center fixed;
+.no-webp body {
+  // For Safari Support
+  background-image: url("/img/background.jpg");
 }
 
 body {
@@ -12,6 +12,10 @@ body {
   -moz-background-size: cover;
   -o-background-size: cover;
   background-size: cover;
+
+  background-repeat: no-repeat;
+  background-position: center;
+  background-attachment: fixed;
 }
 
 .card {
