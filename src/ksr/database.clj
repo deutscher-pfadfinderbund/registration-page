@@ -99,13 +99,17 @@
 (defn alle-pfadis
   "Gibt eine Collection von pfadis zurück."
   []
-  (-> (d/q
-        '[:find (pull ?pfadis pattern)
-          :in $ pattern
-          :where [?pfadis :pfadi/name]]
-        (d/db (new-connection)) pfadi-pattern)
-      (tools/pull-key-up :db/ident)
-      flatten))
+  (let [pfadis (d/q
+                 '[:find (pull ?pfadis pattern) ?when
+                   :in $ pattern
+                   :where
+                   [?pfadis :pfadi/name _ ?tx]
+                   [?tx :db/txInstant ?when]]
+                 (d/db (new-connection)) pfadi-pattern)
+        pfadis' (tools/pull-key-up pfadis :db/ident)]
+    (flatten (map (fn [[pfadi timestamp]]
+                    (assoc pfadi :erstellt timestamp))
+                  pfadis'))))
 
 (comment
   ;; Notwendig zum Starten der Datenbank

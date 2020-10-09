@@ -128,9 +128,26 @@
 ;; -----------------------------------------------------------------------------
 ;; Admin
 
-(defn admin-page [request]
+(defn admin-page [_request]
   (with-header
-    [:h4 "noch nicht implementiert"]))
+    [:section
+     (let [pfadis (database/alle-pfadis)]
+       [:table.table.table-striped.table-hover
+        [:thead
+         [:tr
+          [:th "Name"]
+          [:th "Gruppierung"]
+          [:th "Mail"]
+          [:th "Veranstaltung"]
+          [:th "Angemeldet am"]]]
+        [:tbody
+         (for [pfadi pfadis]
+           [:tr
+            [:td (:pfadi/name pfadi)]
+            [:td (:pfadi/gruppierung pfadi)]
+            [:td (:pfadi/mail pfadi)]
+            [:td (:veranstaltung/art pfadi)]
+            [:td (:erstellt pfadi)]])]])]))
 
 
 ;; -----------------------------------------------------------------------------
