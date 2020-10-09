@@ -32,9 +32,11 @@
                  :extra-deps {io.pedestal/pedestal.service-tools {:mvn/version "0.5.8"}
                               com.datomic/dev-local {:local/root "local_jars/dev-local/dev-local-0.9.203.jar"}}}
 
-           :uberjar {:extra-deps {uberdeps/uberdeps {:mvn/version "1.0.2"}
-                                  com.datomic/dev-local {:local/root "local_jars/dev-local/dev-local-0.9.203.jar"}}
-                     :main-opts ["-m" "uberdeps.uberjar"]}
+           :uberjar {:extra-deps
+                     {seancorfield/depstar {:mvn/version "1.1.126"}
+                      com.datomic/dev-local {:local/root "local_jars/dev-local/dev-local-0.9.203.jar"}}
+                     :main-opts ["-m" "hf.depstar.uberjar"
+                                 "target/registration-page.jar" "--verbose"]}
 
            :clj-kondo
            {:extra-deps {clj-kondo/clj-kondo {:mvn/version "RELEASE"}}

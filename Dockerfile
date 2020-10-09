@@ -17,8 +17,9 @@ COPY . .
 
 RUN sass ./resources/public/css/main.scss ./resources/public/css/main.css --no-source-map --style compressed
 
-RUN make jar
-
 EXPOSE 8080
 
-CMD ["java", "-jar", "target/registration-page.jar"]
+RUN clojure -Sdeps '{:mvn/local-repo "./.m2/repository"}' -A:uberjar
+
+# When using uberjar:
+CMD ["java", "-cp", "target/registration-page.jar", "clojure.main", "-m", "ksr.core"]

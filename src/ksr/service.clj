@@ -8,7 +8,6 @@
             [geheimtur.interceptor :as gti]
             [ksr.database :as database]))
 
-
 (defn with-header [& body]
   (ring-resp/response
     (hp/html5
@@ -160,6 +159,7 @@
               ::http/routes routes
               ::http/resource-path "/public"
               ::http/type :jetty
+              ::http/host "0.0.0.0"
               ::http/port 8080
               ::http/secure-headers {:content-security-policy-settings {:object-src "none"}}
               ::http/container-options {:h2c? true
