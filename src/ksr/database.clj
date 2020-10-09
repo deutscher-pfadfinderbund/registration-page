@@ -1,23 +1,14 @@
 (ns ksr.database
   (:require [datomic.client.api :as d]
-            [ksr.models :as models])
-  (:import (java.io File)))
-
-(defn- create-directory!
-  "Creates a directory in the project's path. Returns the absolut path of the
-  directory."
-  [^String path]
-  (when-not (or (.startsWith path "/")
-                (.startsWith path ".."))
-    (let [dir (File. path)]
-      (.mkdirs dir)
-      (.getAbsolutePath dir))))
+            [ksr.models :as models]
+            [ksr.tools :as tools]
+            [mount.core :refer [defstate]]))
 
 (def ^:private datomic
   "Configure datomic dev-local."
   {:system "development"
    :server-type :dev-local
-   :storage-dir (create-directory! ".datomic/dev-local/data")})
+   :storage-dir (tools/create-directory! ".datomic/dev-local/data")})
 
 (def ^:private datomic-info
   (atom {:client nil
@@ -76,10 +67,21 @@
      (create-database!))
    (create-schema! (new-connection))))
 
+(defstate service
+  :start (init!))
 
 ;; -----------------------------------------------------------------------------
 
-(defn pfadi-eintragen! [pfadi]
+(def ^:private pfadi-pattern
+  [:db/id
+   :pfadi/name
+   :pfadi/mail
+   :pfadi/gruppierung
+   :veranstaltung/art])
+
+(defn pfadi-eintragen!
+  "Speichert einen Pfadi in die Datenbank."
+  [pfadi]
   (transact [pfadi]))
 
 (defn pfadi-verarbeiten
@@ -94,7 +96,19 @@
                        :pfadi/mail mail
                        :veranstaltung/art veranstaltung})))
 
+(defn alle-pfadis
+  "Gibt eine Collection von pfadis zurück."
+  []
+  (-> (d/q
+        '[:find (pull ?pfadis pattern)
+          :in $ pattern
+          :where [?pfadis :pfadi/name]]
+        (d/db (new-connection)) pfadi-pattern)
+      (tools/pull-key-up :db/ident)
+      flatten))
+
 (comment
   ;; Notwendig zum Starten der Datenbank
   (init!)
+
   nil)
